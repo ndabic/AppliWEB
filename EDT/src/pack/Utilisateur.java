@@ -1,13 +1,12 @@
 package pack;
 
+import java.util.*;
+
 import javax.persistence.*;
 
 @Entity
 public class Utilisateur {
 	
-	public enum Statut {
-		  ADMIN, ENSEIGNANT, ETUDIANT
-		}
 	
 	@Id @GeneratedValue
 	int id;
@@ -17,9 +16,55 @@ public class Utilisateur {
 	String mdp;
 	String mail;
 	int numero;
-	Statut statut;
+	
+	@ManyToMany
+	List<Edt> edts_prof_eleve;
+	
+	@ManyToMany
+	List<Edt> edts_admin;
+	
+	
+	@ManyToMany
+	List<Groupe> groupes;
+	
+	@OneToMany(mappedBy = "prof")
+	List<Cours> enseigne;
+	
 	
 	public Utilisateur() {}
+	
+	public List<Edt> getEdts_prof_eleve() {
+		return edts_prof_eleve;
+	}
+
+
+	public void setEdts_prof_eleve(List<Edt> edts_prof_eleve) {
+		this.edts_prof_eleve = edts_prof_eleve;
+	}
+
+
+	public List<Edt> getEdts_admin() {
+		return edts_admin;
+	}
+
+
+	public void setEdts_admin(List<Edt> edts_admin) {
+		this.edts_admin = edts_admin;
+	}
+
+
+	public List<Groupe> getGroupes() {
+		return groupes;
+	}
+
+
+	public void setGroupes(List<Groupe> groupes) {
+		this.groupes = groupes;
+	}
+	
+
+	
+	
 	
 	
 	public int getId() {
@@ -58,12 +103,16 @@ public class Utilisateur {
 	public void setNumero(int numero) {
 		this.numero = numero;
 	}
-	public Statut getStatut() {
-		return statut;
+
+	public List<Cours> getEnseigne() {
+		return enseigne;
 	}
-	public void setStatut(Statut statut) {
-		this.statut = statut;
+
+	public void setEnseigne(List<Cours> enseigne) {
+		this.enseigne = enseigne;
 	}
+	
+
 	
 		
 }
