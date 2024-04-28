@@ -1,0 +1,116 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    color: black;
+    background: transparent;
+    scroll-behavior: smooth;
+}
+
+html {
+    height: 100%;
+}
+
+body {
+    position: relative;
+    font-family: 'Poppins', sans-serif;
+    height: 90%;
+    background: #ececec;
+}
+
+.container {
+    border-radius: 20px;
+    margin: 40px 20px 0px 20px;
+    padding: 10px;
+    width: fit-content;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.281);
+}
+
+h1 {
+    margin: 20px;
+    text-align: left;
+    color: #ececec;
+    font-weight: bolder;
+    font-size: 40px;
+    width: fit-content;
+    height: fit-content;
+    background-color: #505050;
+}
+
+.schedule-table {
+    align-self: auto;
+    border-collapse: collapse;
+}
+
+
+
+
+.schedule-table {
+    margin-left: 44px;
+}
+
+
+.schedule-table th {
+    width: var(--daySizeW, calc(100vw / 5));
+    height: var(--daySizeH, calc(80vh / 24));
+    border: 2px solid #bebebe;
+    background-color: #f2f2f2;
+    font-weight: bold;
+}
+
+.slot {
+    width: var(--daySizeW);
+    height: var(--slotSizeH, calc(80vh / 6));
+    border: 2px solid #ddd;
+    text-align: center;
+    
+}
+
+
+
+
+
+
+
+.schedule-table td {
+    font-size: 14px;
+    position: relative; 
+}
+
+
+
+
+
+.case_cours {
+    width: 100%;
+    position: absolute;
+    overflow: hidden;
+    /*ne semble pas fonctionner avec JBoss*/
+    align-content: center;
+    
+}
+
+.nom_cours {
+    text-align: center;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.info_cours {
+    text-align: left;
+    font-size: 16px;
+}
+
+.scheduleHours {
+    position: absolute;
+    border: 2px #505050;
+    align-items: right;
+    text-align: right;
+    font-size: 12px;
+}
+
+.hiddenDiv {
+	display: none;
+}
