@@ -10,7 +10,7 @@ public class Type {
 	@Id
 	String nom;
 	
-	@OneToMany(mappedBy ="type")
+	@OneToMany(mappedBy ="type", fetch=FetchType.EAGER)
 	List<Cours> cours_associes;
 	
 	public Type() {}

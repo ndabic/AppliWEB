@@ -10,11 +10,14 @@ public class Edt {
 	@Id 
 	String codeAdmin, codeEtu, codeProf;
 	
-	@ManyToMany(mappedBy = "edts_prof_eleve")
+	@ManyToMany(mappedBy = "edts_prof_eleve", fetch=FetchType.EAGER)
 	List<Utilisateur> utilisateurs_prof_eleve;
 	
-	@ManyToMany(mappedBy = "edts_admin")
+	@ManyToMany(mappedBy = "edts_admin", fetch=FetchType.EAGER)
 	List<Utilisateur> admins;
+	
+	@OneToMany(mappedBy = "edt_associe", fetch=FetchType.EAGER)
+	List<Cours> cours;
 
 	public Edt() {}
 	

@@ -12,7 +12,7 @@ public class Salle {
 	
 	//Boolean libre;
 	
-	@OneToMany(mappedBy ="salle")
+	@OneToMany(mappedBy ="salle", fetch=FetchType.EAGER)
 	List<Cours> cours_associes;
 	
 	

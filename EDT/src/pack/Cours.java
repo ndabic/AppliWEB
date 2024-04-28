@@ -27,6 +27,9 @@ public class Cours {
 	
 	@ManyToOne
 	Salle salle;
+	
+	@ManyToOne
+	Edt edt_associe;
 
 	public Cours() {}
 	

@@ -27,7 +27,7 @@ public class Utilisateur {
 	@ManyToMany
 	List<Groupe> groupes;
 	
-	@OneToMany(mappedBy = "prof")
+	@OneToMany(mappedBy = "prof", fetch=FetchType.EAGER)
 	List<Cours> enseigne;
 	
 	
