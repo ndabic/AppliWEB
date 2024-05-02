@@ -11,7 +11,7 @@ public class Type {
 	String nom;
 	
 	@OneToMany(mappedBy ="type", fetch=FetchType.EAGER)
-	List<Cours> cours_associes;
+	Collection<Cours> cours_associes;
 	
 	public Type() {}
 
@@ -23,11 +23,11 @@ public class Type {
 		this.nom = nom;
 	}
 
-	public List<Cours> getCours_associes() {
+	public Collection<Cours> getCours_associes() {
 		return cours_associes;
 	}
 
-	public void setCours_associes(List<Cours> cours_associes) {
+	public void setCours_associes(Collection<Cours> cours_associes) {
 		this.cours_associes = cours_associes;
 	}
 }

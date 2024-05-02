@@ -11,10 +11,10 @@ public class Groupe {
 	String nom;
 	
 	@ManyToMany(mappedBy = "groupes", fetch=FetchType.EAGER)
-	List<Utilisateur> membres;
+	Collection<Utilisateur> membres;
 	
 	@ManyToMany(mappedBy ="groupes", fetch=FetchType.EAGER)
-	List<Cours> cours_etude;
+	Collection<Cours> cours_etude;
 	
 	public Groupe() {}
 
@@ -26,19 +26,19 @@ public class Groupe {
 		this.nom = nom;
 	}
 
-	public List<Cours> getCours_etude() {
+	public Collection<Cours> getCours_etude() {
 		return cours_etude;
 	}
 
-	public void setCours_etude(List<Cours> cours_etude) {
+	public void setCours_etude(Collection<Cours> cours_etude) {
 		this.cours_etude = cours_etude;
 	}
 
-	public List<Utilisateur> getMembres() {
+	public Collection<Utilisateur> getMembres() {
 		return membres;
 	}
 
-	public void setMembres(List<Utilisateur> membres) {
+	public void setMembres(Collection<Utilisateur> membres) {
 		this.membres = membres;
 	}
 

@@ -13,7 +13,7 @@ public class Cours {
 	Date debut, fin;
 	
 	@ManyToMany
-	List<Groupe> groupes;
+	Collection<Groupe> groupes;
 	
 	@ManyToOne
 	Utilisateur prof;
@@ -33,11 +33,11 @@ public class Cours {
 
 	public Cours() {}
 	
-	public List<Groupe> getGroupes() {
+	public Collection<Groupe> getGroupes() {
 		return groupes;
 	}
 
-	public void setGroupes(List<Groupe> groupes) {
+	public void setGroupes(Collection<Groupe> groupes) {
 		this.groupes = groupes;
 	}
 

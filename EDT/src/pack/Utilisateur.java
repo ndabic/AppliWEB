@@ -8,71 +8,62 @@ import javax.persistence.*;
 public class Utilisateur {
 	
 	
-	@Id @GeneratedValue
-	int id;
+	@Id 
+	String mail;
 	
 	String nom;
 	String prenom;
 	String mdp;
-	String mail;
-	int numero;
+	
+	
+	Collection<Integer> numero; // A REVOIR
 	
 	@ManyToMany
-	List<Edt> edts_prof_eleve;
+	Collection<Edt> edts_prof_eleve;
 	
 	@ManyToMany
-	List<Edt> edts_admin;
+	Collection<Edt> edts_admin;
 	
 	
 	@ManyToMany
-	List<Groupe> groupes;
+	Collection<Groupe> groupes;
 	
 	@OneToMany(mappedBy = "prof", fetch=FetchType.EAGER)
-	List<Cours> enseigne;
+	Collection<Cours> enseigne;
 	
 	
 	public Utilisateur() {}
 	
-	public List<Edt> getEdts_prof_eleve() {
+	public Collection<Edt> getEdts_prof_eleve() {
 		return edts_prof_eleve;
 	}
 
 
-	public void setEdts_prof_eleve(List<Edt> edts_prof_eleve) {
+	public void setEdts_prof_eleve(Collection<Edt> edts_prof_eleve) {
 		this.edts_prof_eleve = edts_prof_eleve;
 	}
 
 
-	public List<Edt> getEdts_admin() {
+	public Collection<Edt> getEdts_admin() {
 		return edts_admin;
 	}
 
 
-	public void setEdts_admin(List<Edt> edts_admin) {
+	public void setEdts_admin(Collection<Edt> edts_admin) {
 		this.edts_admin = edts_admin;
 	}
 
 
-	public List<Groupe> getGroupes() {
+	public Collection<Groupe> getGroupes() {
 		return groupes;
 	}
 
 
-	public void setGroupes(List<Groupe> groupes) {
+	public void setGroupes(Collection<Groupe> groupes) {
 		this.groupes = groupes;
 	}
 	
 
-	
-	
-	
-	
-	public int getId() {
-		return id;
-	}
-	public void setId(int id) {
-		this.id = id;
-	}
 	public String getNom() {
 		return nom;
 	}
@@ -97,18 +88,18 @@ public class Utilisateur {
 	public void setMail(String mail) {
 		this.mail = mail;
 	}
-	public int getNumero() {
+	public Collection<Integer> getNumero() {
 		return numero;
 	}
-	public void setNumero(int numero) {
+	public void setNumero(Collection<Integer> numero) {
 		this.numero = numero;
 	}
 
-	public List<Cours> getEnseigne() {
+	public Collection<Cours> getEnseigne() {
 		return enseigne;
 	}
 
-	public void setEnseigne(List<Cours> enseigne) {
+	public void setEnseigne(Collection<Cours> enseigne) {
 		this.enseigne = enseigne;
 	}
 	

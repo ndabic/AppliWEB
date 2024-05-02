@@ -16,7 +16,10 @@ public class Serv extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
 	
-       
+    @EJB
+    Facade facade = new Facade();
+    
+    
     /**
      * @see HttpServlet#HttpServlet()
      */

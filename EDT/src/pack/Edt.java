@@ -8,16 +8,18 @@ import javax.persistence.*;
 public class Edt {
 	
 	@Id 
-	String codeAdmin, codeEtu, codeProf;
+	String codeAdmin;
+	String codeEtu;
+	String codeProf;
 	
 	@ManyToMany(mappedBy = "edts_prof_eleve", fetch=FetchType.EAGER)
-	List<Utilisateur> utilisateurs_prof_eleve;
+	Collection<Utilisateur> utilisateurs_prof_eleve;
 	
 	@ManyToMany(mappedBy = "edts_admin", fetch=FetchType.EAGER)
-	List<Utilisateur> admins;
+	Collection<Utilisateur> admins;
 	
 	@OneToMany(mappedBy = "edt_associe", fetch=FetchType.EAGER)
-	List<Cours> cours;
+	Collection<Cours> cours;
 
 	public Edt() {}
 	
@@ -45,19 +47,19 @@ public class Edt {
 		this.codeProf = codeProf;
 	}
 
-	public List<Utilisateur> getUtilisateurs_prof_eleve() {
+	public Collection<Utilisateur> getUtilisateurs_prof_eleve() {
 		return utilisateurs_prof_eleve;
 	}
 
-	public void setUtilisateurs_prof_eleve(List<Utilisateur> utilisateurs_prof_eleve) {
+	public void setUtilisateurs_prof_eleve(Collection<Utilisateur> utilisateurs_prof_eleve) {
 		this.utilisateurs_prof_eleve = utilisateurs_prof_eleve;
 	}
 
-	public List<Utilisateur> getAdmins() {
+	public Collection<Utilisateur> getAdmins() {
 		return admins;
 	}
 
-	public void setAdmins(List<Utilisateur> admins) {
+	public void setAdmins(Collection<Utilisateur> admins) {
 		this.admins = admins;
 	}
 	
