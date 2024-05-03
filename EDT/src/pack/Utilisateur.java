@@ -16,7 +16,7 @@ public class Utilisateur {
 	String mdp;
 	
 	
-	Collection<Integer> numero; // A REVOIR
+	//Collection<Integer> numero; // A REVOIR
 	
 	@ManyToMany
 	Collection<Edt> edts_prof_eleve;
@@ -88,12 +88,12 @@ public class Utilisateur {
 	public void setMail(String mail) {
 		this.mail = mail;
 	}
-	public Collection<Integer> getNumero() {
+	/*public Collection<Integer> getNumero() {
 		return numero;
 	}
 	public void setNumero(Collection<Integer> numero) {
 		this.numero = numero;
-	}
+	}*/
 
 	public Collection<Cours> getEnseigne() {
 		return enseigne;
