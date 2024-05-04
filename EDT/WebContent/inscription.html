@@ -3,10 +3,14 @@
 </head>
 <body>
 
-	<form name="login" method="POST" action="">
-	    Username : <input name="mail"><br>
-	    Password : <input type="password" name="mdp"><br><br>
-	    <input onclick="Login()" type="button" value="login" name="button">
+	<form name="signup" method="post" action="Serv">
+		nom : <input type="text" name="nom"><br>
+		prénom : <input type="text" name="prenom"><br>
+	    mail : <input type="text" name="mail"><br>
+	    mot de passe : <input type="password" name="mdp"><br><br>
+	    confirmer le mot de passe : <input type="password" name="mdpConf"><br><br>
+	    <input type="submit" value="create Account" name="signUpButton">
+	    <input type="hidden"name="op" value="inscription">
 	</form>
 
 </body></html>

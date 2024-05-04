@@ -74,14 +74,14 @@ function printHours() {
 const showTime = async () => {
     
     await delay(500);
-    place_cours("rgba(255, 45, 100, 0.5)", "WEB", "TP", "A002", ["M1", "M2"], ["Daniel", "HAGIMONT"], [[8, 0],[15,45]], 2);
-    let cours = document.getElementsByClassName("case_cours");
+    //place_cours("rgba(255, 45, 100, 0.5)", "WEB", "TP", "A002", ["M1", "M2"], ["Daniel", "HAGIMONT"], [[8, 0],[15,45]], 2);
+    /*let cours = document.getElementsByClassName("case_cours");
     for (let index = 0; index < cours.length; index++) {
         await delay(waitingTime);
         const element = cours[index];
         element.classList.add("print-out");
         //waitingTime += 20;
-    }
+    }*/
     
 };
 

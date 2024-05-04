@@ -2,6 +2,8 @@ package pack;
 
 import javax.ejb.Singleton;
 import javax.persistence.*;
+
+import java.time.*;
 import java.util.*;
 
 @Singleton
@@ -44,18 +46,43 @@ public class Facade {
 		em.persist(edt);
 	}
 	
-	public Collection<Cours> getCoursSemaine(String mail_utilisateur, Date lundi, Date vendredi){
+	public List<LocalDateTime> getLundiVendrediCourant() {
+		LocalDate today = LocalDate.now();
+		int jourSemaine = today.getDayOfWeek().getValue();
+		LocalDate lundi = today.minusDays(jourSemaine-1);
+		LocalDate vendredi = today.plusDays(5-jourSemaine);
+        
+        LocalTime matin = LocalTime.of(1, 0, 0);
+        LocalDateTime lundiMatin = LocalDateTime.of(lundi, matin);
+        
+        LocalTime soir = LocalTime.of(23, 0, 0);
+        LocalDateTime vendrediSoir = LocalDateTime.of(vendredi, soir);
+		List<LocalDateTime> lundiVendredi = new ArrayList<>();
+		lundiVendredi.add(lundiMatin);
+		lundiVendredi.add(vendrediSoir);
+		return lundiVendredi;
 		
-		Utilisateur utilisateur = em.find(Utilisateur.class, mail_utilisateur);
-		Collection<Groupe> groupes = utilisateur.getGroupes();
+	}
+	
+	public Collection<Cours> getCoursSemaine(String mail_utilisateur){
+		List<LocalDateTime> lundiVendredi = getLundiVendrediCourant();
+		LocalDateTime lundi = lundiVendredi.get(0);
+		LocalDateTime vendredi = lundiVendredi.get(1);
 		Collection<Cours> coursSemaine = new ArrayList<>();
-		for (Groupe groupe : groupes) {
-			Collection<Cours> coursCourant = groupe.getCours_etude();
-			for (Cours cours : coursCourant) {
-				if (cours.getDebut().after(lundi) && cours.getFin().before(vendredi))
-					coursSemaine.add(cours);
+		Utilisateur utilisateur = em.find(Utilisateur.class, mail_utilisateur);
+		Collection<LinkUtilEDT> links = utilisateur.getLienEDT();
+		for(LinkUtilEDT link : links) {
+			Collection<Groupe> groupes = link.getGroupes();
+			for (Groupe groupe : groupes) {
+				Collection<Cours> coursCourant = groupe.getCours_etude();
+				for (Cours cours : coursCourant) {
+					if (cours.getDebut().isAfter(lundi) && cours.getFin().isBefore(vendredi))
+						coursSemaine.add(cours);
+				}
 			}
 		}
+		
+		
 		return coursSemaine;
 		
 	}

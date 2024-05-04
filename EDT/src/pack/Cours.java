@@ -1,5 +1,6 @@
 package pack;
 
+import java.time.*;
 import java.util.*;
 
 import javax.persistence.*;
@@ -10,13 +11,13 @@ public class Cours {
 	@Id
 	int id;
 	
-	Date debut, fin;
+	LocalDateTime debut, fin;
 	
 	@ManyToMany
 	Collection<Groupe> groupes;
 	
 	@ManyToOne
-	Utilisateur prof;
+	LinkUtilEDT prof; // lie le prof grâce à son numéro
 	
 
 	@ManyToOne
@@ -41,11 +42,11 @@ public class Cours {
 		this.groupes = groupes;
 	}
 
-	public Utilisateur getProf() {
+	public LinkUtilEDT getProf() {
 		return prof;
 	}
 
-	public void setProf(Utilisateur prof) {
+	public void setProf(LinkUtilEDT prof) {
 		this.prof = prof;
 	}
 	
@@ -57,19 +58,19 @@ public class Cours {
 		this.id = id;
 	}
 
-	public Date getDebut() {
+	public LocalDateTime getDebut() {
 		return debut;
 	}
 
-	public void setDebut(Date debut) {
+	public void setDebut(LocalDateTime debut) {
 		this.debut = debut;
 	}
 
-	public Date getFin() {
+	public LocalDateTime getFin() {
 		return fin;
 	}
 
-	public void setFin(Date fin) {
+	public void setFin(LocalDateTime fin) {
 		this.fin = fin;
 	}
 

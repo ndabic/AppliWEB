@@ -11,7 +11,7 @@ public class Groupe {
 	String nom;
 	
 	@ManyToMany(mappedBy = "groupes", fetch=FetchType.EAGER)
-	Collection<Utilisateur> membres;
+	Collection<LinkUtilEDT> membres;
 	
 	@ManyToMany(mappedBy ="groupes", fetch=FetchType.EAGER)
 	Collection<Cours> cours_etude;
@@ -34,11 +34,11 @@ public class Groupe {
 		this.cours_etude = cours_etude;
 	}
 
-	public Collection<Utilisateur> getMembres() {
+	public Collection<LinkUtilEDT> getMembres() {
 		return membres;
 	}
 
-	public void setMembres(Collection<Utilisateur> membres) {
+	public void setMembres(Collection<LinkUtilEDT> membres) {
 		this.membres = membres;
 	}
 

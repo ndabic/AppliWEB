@@ -12,8 +12,8 @@ public class Edt {
 	String codeEtu;
 	String codeProf;
 	
-	@ManyToMany(mappedBy = "edts_prof_eleve", fetch=FetchType.EAGER)
-	Collection<Utilisateur> utilisateurs_prof_eleve;
+	@OneToMany(mappedBy = "edt", fetch=FetchType.EAGER)
+	Collection<LinkUtilEDT> liens_utilisateur;  // Numéros étudiants (liens entre l'étudiant et son emploi du temps)
 	
 	@ManyToMany(mappedBy = "edts_admin", fetch=FetchType.EAGER)
 	Collection<Utilisateur> admins;
@@ -47,13 +47,6 @@ public class Edt {
 		this.codeProf = codeProf;
 	}
 
-	public Collection<Utilisateur> getUtilisateurs_prof_eleve() {
-		return utilisateurs_prof_eleve;
-	}
-
-	public void setUtilisateurs_prof_eleve(Collection<Utilisateur> utilisateurs_prof_eleve) {
-		this.utilisateurs_prof_eleve = utilisateurs_prof_eleve;
-	}
 
 	public Collection<Utilisateur> getAdmins() {
 		return admins;
@@ -61,6 +54,22 @@ public class Edt {
 
 	public void setAdmins(Collection<Utilisateur> admins) {
 		this.admins = admins;
+	}
+
+	public Collection<LinkUtilEDT> getLiens_utilisateur_EDT() {
+		return liens_utilisateur;
+	}
+
+	public void setLiens_utilisateur_EDT(Collection<LinkUtilEDT> liens_utilisateur_EDT) {
+		this.liens_utilisateur = liens_utilisateur_EDT;
+	}
+
+	public Collection<Cours> getCours() {
+		return cours;
+	}
+
+	public void setCours(Collection<Cours> cours) {
+		this.cours = cours;
 	}
 	
 	

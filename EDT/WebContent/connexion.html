@@ -3,13 +3,12 @@
 </head>
 <body>
 
-	<form name="signup" method="POST" action="">
-		nom : <input name="nom"><br>
-		prénom : <input name="prenom"><br>
-	    mail : <input name="mail"><br>
-	    mot de passe : <input type="password" name="mdp"><br><br>
-	    confirmer le mot de passe : <input type="password" name="mdp"><br><br>
-	    <input onclick="Login()" type="button" value="login" name="button">
+	<form name="login" method="post" action="Serv">
+	    Mail Address : <input type="text" name="mail"><br>
+	    Password : <input type="password" name="mdp"><br><br>
+	    <input type="submit" value="login" name="loginButton">
+	    <input type="hidden"name="op" value="connexion">
+	    
 	</form>
 
 </body></html>
