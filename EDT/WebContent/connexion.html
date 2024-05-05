@@ -1,14 +1,25 @@
-<html><head>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              <script type="text/javascript" src="login.js"></script>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login Page</title>
+    <link rel="stylesheet" type="text/css" href="connexion_style.css">
+    <link rel="icon" type="image/png" href="../assets/Logo.png">
 </head>
 <body>
 
-	<form name="login" method="post" action="Serv">
-	    Mail Address : <input type="text" name="mail"><br>
-	    Password : <input type="password" name="mdp"><br><br>
-	    <input type="submit" value="login" name="loginButton">
-	    <input type="hidden"name="op" value="connexion">
-	    
-	</form>
+    <div class="container">
+        <form name="signin" method="post" action="Serv" onsubmit="return validateForm()">
+            <label for="mail">Email:</label>
+            <input type="text" id="mail" name="mail"><br>
+            <label for="mdp">Mot de passe:</label>
+            <input type="password" id="mdp" name="mdp"><br><br>
+            <input type="submit" value="Connexion" name="loginButton">
+            <input type="hidden" name="op" value="connexion">
+        </form>
+        <div class="error-message"></div>
+    </div>
 
-</body></html>
+    <script src="connexion_script.js"></script>
+</body>
+</html>
+

@@ -1,16 +1,30 @@
-<html><head>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              <script type="text/javascript" src="login.js"></script>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Signup Page</title>
+    <link rel="stylesheet" type="text/css" href="inscription_style.css">
+    <link rel="icon" type="image/png" href="../assets/Logo.png">
 </head>
 <body>
 
-	<form name="signup" method="post" action="Serv">
-		nom : <input type="text" name="nom"><br>
-		prénom : <input type="text" name="prenom"><br>
-	    mail : <input type="text" name="mail"><br>
-	    mot de passe : <input type="password" name="mdp"><br><br>
-	    confirmer le mot de passe : <input type="password" name="mdpConf"><br><br>
-	    <input type="submit" value="create Account" name="signUpButton">
-	    <input type="hidden"name="op" value="inscription">
-	</form>
+    <div class="container">
+        <form name="signup" method="post" action="Serv" onsubmit="return validateForm()">
+			<label for="prenom">Prénom:</label>
+            <input type="text" id="prenom" name="prenom"><br>
+            <label for="nom">Nom:</label>
+            <input type="text" id="nom" name="nom"><br>
+            <label for="mail">Mail:</label>
+            <input type="text" id="mail" name="mail"><br>
+            <label for="mdp">Mot de passe:</label>
+            <input type="password" id="mdp" name="mdp"><br>
+            <label for="mdpConf">Confirmer le mot de passe:</label>
+            <input type="password" id="mdpConf" name="mdpConf"><br><br>
+            <input type="submit" value="Créer le compte" name="signUpButton">
+            <input type="hidden" name="op" value="inscription">
+        </form>
+		<div class="error-message"></div>
+    </div>
 
-</body></html>
+	<script src="inscription_script.js"></script>
+</body>
+</html>

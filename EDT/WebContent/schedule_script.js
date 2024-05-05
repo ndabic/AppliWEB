@@ -71,6 +71,12 @@ function printHours() {
     }
 }
 
+const btn1 = document.querySelector(".button-color-1");
+const btn2 = document.querySelector(".button-color-2");
+
+btn1.onmouseenter = event => btn2.classList.add("sipped");
+btn1.onmouseleave = event => btn2.classList.remove("sipped");
+
 const showTime = async () => {
     
     await delay(500);
