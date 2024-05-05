@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emploi Du Temps</title>
+    <link rel="stylesheet" type="text/css" href="profile_style.css">
+	<link rel="icon" type="image/png" href="./assets/Logo.png">
+</head>
+<body>
+
+	<div class="header">
+		<h1 onclick="location.href='schedule.html'">&#160;Emploi Du Temps&#160;</h1>
+	</div>
+	
+    <div class="page-container">
+        <div class="infos-container">
+
+        </div>
+
+        <div class="edt-container">
+            <div class="edt-header">
+                <h2 class="edt-title">&#160;Gestionnaire d'emplois du temps&#160;</h2>
+                <div class="edt-buttons">
+                    <button class="button-add-edt" title="Créer un EDT">&#160;+&#160;</button>
+                    <button class="button-link-edt" title="Se lier à un EDT">&#160;-//-&#160;</button>
+                </div>
+            </div>
+            <div class="notif hide"></div>
+            <div class="edt-scroller">
+                <div class="edt 0">
+                    <div class="edt-name">EDT0</div>
+                    <div class="edt-interface">
+                        <div class="code-edt code-admin 0" onclick="copyContent('AXI567')">&#160;AXI567&#160;</div>
+                        <div class="code-edt code-prof 0" onclick="copyContent('IUY543')">&#160;IUY543&#160;</div>
+                        <div class="code-edt code-etu 0" onclick="copyContent('OIU987')">&#160;OIU987&#160;</div>
+                        <button class="remove-edt 0" title="Détruire l'edt">&#160;X&#160;</button>
+                    </div>
+                </div>
+
+                <div class="edt 1">This is a edt 1</div>
+                <div class="edt 0">This is edt 0</div>
+                <div class="edt 1">This is a edt 1</div>
+                <div class="edt 0">This is edt 0</div>
+                <div class="edt 1">This is a edt 1</div>
+                <div class="edt 0">This is edt 0</div>
+                <div class="edt 1">This is a edt 1</div>
+                <div class="edt 0">This is edt 0</div>
+                <div class="edt 1">This is a edt 1</div>
+            </div>
+        </div>
+
+    </div>
+
+	
+	
+
+<script src="profile_script.js"></script>
+</body>
+</html>

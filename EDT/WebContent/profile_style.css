@@ -1,0 +1,405 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
+
+/* WebKit (Chrome, Safari, etc.) scrollbar */
+::-webkit-scrollbar {
+    width: 6px; /* width of the scrollbar */
+}
+
+/* Track (the area on which the thumb glides) */
+::-webkit-scrollbar-track {
+    background: #f1f1f1; /* color of the track */
+}
+
+/* Thumb (the draggable scrolling handle) */
+::-webkit-scrollbar-thumb {
+    background: #888; /* color of the thumb */
+    border-radius: 1rem; /* roundness of the thumb */
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: #555; /* color of the thumb on hover */
+    width: 10px;
+}
+
+:root {
+    --color-0: #20130e;
+    --color-1: #4c2c21;
+    --color-2: #78462c;
+    --color-3: #ab6c46;
+    --color-4: #d19e79;
+    --color-5: #f2e3c3;
+
+    --color-danger: #e03f3f;
+
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    color: var(--color-0);
+    background: transparent;
+    scroll-behavior: smooth;
+}
+
+html {
+    height: 100%;
+}
+
+body {
+    position: relative;
+    font-family: 'Poppins', sans-serif;
+    height: 90%;
+    background: var(--color-5);
+}
+
+/*** HEADER ***/
+
+.header {
+    display: flex;
+}
+
+/** TITLE **/
+
+h1 {
+    cursor: pointer;
+    margin: 20px;
+    border-radius: 1rem;
+    padding: 2px;
+    text-align: left;
+    color: var(--color-5);
+    font-weight: bolder;
+    font-size: 40px;
+    width: fit-content;
+    height: fit-content;
+    background-color: var(--color-1);
+    transition: background-color 300ms ease-in-out;
+}
+
+h1:hover {
+    background-color: var(--color-0);
+    transition: background-color 300ms ease-in-out;
+}
+
+.page-container {
+    display: flex;
+    height: 94%;
+    position: relative;
+    gap: 0rem;
+    margin: 40px 20px 0px 20px;
+    border-radius: 1rem;
+    box-shadow: 0 0 10px var(--color-0);
+}
+
+.infos-container {
+    position: relative;
+    width: 80%;
+    border: 4px solid var(--color-2);
+    border-right: 4px dashed var(--color-2);
+    border-top-left-radius: 1rem;
+    border-bottom-left-radius: 1rem;
+    padding: 10px;
+    background-color: var(--color-4);
+    
+}
+
+.notif {
+    display: none;
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    border-radius: 1rem;
+    width: fit-content;
+    height: fit-content;
+    background-color: var(--color-1);
+    color: var(--color-5);
+    border: 0px solid var(--color-1);
+    padding: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    z-index: 9999;
+}
+
+.notif-show {
+    display: block;
+}
+
+.edt-container {
+    position: relative;
+    width: 100%;
+    border-right: 4px solid var(--color-2);
+    border-top: 4px solid var(--color-2);
+    border-bottom: 4px solid var(--color-2);
+    border-top-right-radius: 1rem;
+    border-bottom-right-radius: 1rem;
+    padding: 10px;
+    background-color: var(--color-4);
+    
+}
+
+.edt-header {
+    display: flex;
+    gap: 1rem;
+}
+
+h2 {
+    cursor: pointer;
+    border-radius: 1rem;
+    padding: 2px;
+    text-align: center;
+    color: var(--color-5);
+    font-weight: bolder;
+    width: fit-content;
+    height: fit-content;
+    background-color: var(--color-2);
+    transition: background-color 300ms ease-in-out;
+}
+
+.edt-buttons {
+    display: flex;
+    gap: .4rem;
+}
+
+.button-add-edt {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 26px;
+    border: 0px solid var(--color-1);
+    border-radius: 100%;
+    height: 40px;
+    width: 40px;
+    border-top-right-radius: 1rem;
+    border-bottom-right-radius: 1rem;
+    background-image: linear-gradient(var(--color-1), var(--color-1));
+    background-size: 0% 100%;
+    background-color: var(--color-3);
+    background-repeat: no-repeat;
+    background-position: 100% 100%;
+    color: var(--color-1);
+    transition: background-position 500ms,
+    background-size 300ms, 
+    margin-left 700ms,
+    color 300ms
+    ease-in-out;
+}
+
+.button-add-edt:hover {
+    background-size: 100% 100%;
+    background-position: 110% 100%;
+    color: var(--color-4);
+    transition: background-position 100ms, 
+    background-size 300ms, 
+    margin-left 700ms,
+    color 300ms
+    ease-in-out;
+}
+
+.button-link-edt {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 26px;
+    border: 0px solid var(--color-1);
+    border-radius: 0.5rem;
+    height: 40px;
+    width: fit-content;
+    background-image: linear-gradient(var(--color-1), var(--color-1));
+    background-size: 0% 100%;
+    background-color: var(--color-3);
+    background-repeat: no-repeat;
+    background-position: 0% 100%;
+    color: var(--color-1);
+    transition: background-position 500ms,
+    background-size 300ms, 
+    margin-left 700ms,
+    color 300ms
+    ease-in-out;
+}
+
+.button-link-edt:hover {
+    background-size: 100% 100%;
+    background-position: 0% 100%;
+    color: var(--color-4);
+    transition: background-position 100ms, 
+    background-size 300ms, 
+    margin-left 700ms,
+    color 300ms
+    ease-in-out;
+}
+
+.edt-scroller {
+    display: flexbox;
+    position: absolute;
+    left: 0px;
+    right: 0px;
+    top: 20px;
+    bottom: 10px;
+    border: 4px solid var(--color-2);
+    border-radius: 1rem;
+    margin: 40px 20px 0px 20px;
+    padding: 10px;
+    background-color: var(--color-4);
+    box-shadow: inset 0 0 10px var(--color-0);
+    overflow: hidden;
+    column-gap: 1rem;
+}
+
+.edt-container > .edt-scroller {
+    overflow-y: scroll; /* Enable vertical scrolling */
+}
+
+    /* Hide scrollbar */
+.edt-container > .edt-scroller::-webkit-scrollbar {
+    display: none;
+}
+
+.edt {
+    display: flexbox;
+    cursor: pointer;
+    padding: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+    font-size: 18px;
+    height: fit-content;
+    border-radius: 1rem;
+    border: 0px solid var(--color-2);
+    margin-bottom: 10px;
+
+    background-image: linear-gradient(var(--color-1), var(--color-1));
+    background-size: 0% 100%;
+    background-color: var(--color-3);
+    background-repeat: no-repeat;
+    background-position: 0% 100%;
+    color: var(--color-1);
+    transition: background-position 500ms,
+    background-size 1000ms, 
+    color 600ms
+    ease-in-out;
+}
+
+.edt:hover {
+    background-size: 100% 100%;
+    background-position: 0% 100%;
+    color: var(--color-4);
+    transition: background-position 100ms, 
+    background-size 1400ms, 
+    color 800ms
+    ease-in-out;
+}
+
+.edt-name {
+    height: fit-content;
+    width: fit-content;
+    font-size: 30px;
+    font-weight: bold;
+    color: var(--color-1);
+    transition: color 600ms ease-in-out;
+}
+
+.edt:hover .edt-name {
+    background-repeat: no-repeat;
+    color: var(--color-4);
+    transition: background-position 500ms,
+    background-size 300ms, 
+    color 600ms
+    ease-in-out;
+}
+
+.edt-interface {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    align-items: center;
+}
+
+.code-edt {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 24px;
+    border: 0px solid var(--color-4);
+    border-radius: .4rem;
+    width: fit-content;
+    background-image: linear-gradient(var(--color-4), var(--color-4));
+    background-size: 0% 100%;
+    background-color: var(--color-1);
+    background-repeat: no-repeat;
+    background-position: 0% 100%;
+    color: var(--color-5);
+    transition: background-position 500ms,
+    background-size 1000ms, 
+    color 600ms
+    ease-in-out;
+}
+
+.edt:hover .code-edt {
+    background-size: 100% 100%;
+    background-position: 0% 100%;
+    color: var(--color-2);
+    transition: background-position 100ms, 
+    background-size 1400ms, 
+    color 800ms
+    ease-in-out;
+}
+
+.edt:hover .code-edt:hover, .code-edt:hover {
+    background-image: linear-gradient(var(--color-3), var(--color-3));
+    background-size: 100% 100%;
+    background-position: 0% 100%;
+    color: var(--color-1);
+    transition: background-position 100ms, 
+    background-size 1400ms, 
+    color 800ms
+    ease-in-out;
+}
+
+.remove-edt {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 26px;
+    margin-left: 5%;
+    border: 0px solid var(--color-1);
+    border-radius: 100%;
+    height: 40px;
+    width: 40px;
+    background-image: linear-gradient(var(--color-4), var(--color-4));
+    background-size: 0% 100%;
+    background-color: var(--color-1);
+    background-repeat: no-repeat;
+    background-position: 0% 100%;
+    color: var(--color-5);
+    transition: background-position 500ms,
+    background-size 1000ms, 
+    color 600ms
+    ease-in-out;
+}
+
+.edt:hover .remove-edt:hover, .remove-edt:hover {
+    background-image: linear-gradient(var(--color-danger), var(--color-danger));
+    background-size: 100% 100%;
+    background-position: 0% 100%;
+    color: var(--color-5);
+    transition: background-position 100ms, 
+    background-size 1400ms, 
+    color 800ms
+    ease-in-out;
+}
+
+.edt:hover .remove-edt {
+    background-size: 100% 100%;
+    background-position: 0% 100%;
+    color: var(--color-2);
+    transition: background-position 100ms, 
+    background-size 1400ms, 
+    color 800ms
+    ease-in-out;
+}
