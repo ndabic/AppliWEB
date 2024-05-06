@@ -31,6 +31,7 @@
     --color-5: #f2e3c3;
 
     --color-danger: #e03f3f;
+    --color-save: #78b93c;
 
 }
 
@@ -142,7 +143,6 @@ h1:hover {
 }
 
 h2 {
-    cursor: pointer;
     border-radius: 1rem;
     padding: 2px;
     text-align: center;
@@ -259,7 +259,6 @@ h2 {
 
 .edt {
     display: flexbox;
-    cursor: pointer;
     padding: 10px;
     padding-left: 10px;
     padding-right: 10px;
@@ -279,6 +278,14 @@ h2 {
     background-size 1000ms, 
     color 600ms
     ease-in-out;
+}
+
+.edt-admin {
+    cursor: pointer;
+}
+
+.edt-linked {
+    cursor: default;
 }
 
 .edt:hover {
@@ -311,12 +318,12 @@ h2 {
 
 .edt-interface {
     display: flex;
-    gap: 1rem;
     justify-content: center;
     align-items: center;
 }
 
 .code-edt {
+    margin-right: 15px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -403,3 +410,173 @@ h2 {
     color 800ms
     ease-in-out;
 }
+
+.label-edt {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 24px;
+    border: 0px solid var(--color-4);
+    border-radius: .4rem;
+    width: fit-content;
+    background-image: linear-gradient(var(--color-4), var(--color-4));
+    background-size: 0% 100%;
+    background-color: var(--color-1);
+    background-repeat: no-repeat;
+    background-position: 0% 100%;
+    color: var(--color-5);
+    transition: background-position 500ms,
+    background-size 1000ms, 
+    color 600ms
+    ease-in-out;
+}
+
+.edt:hover .label-edt {
+    background-size: 100% 100%;
+    background-position: 0% 100%;
+    color: var(--color-2);
+    transition: background-position 100ms, 
+    background-size 1400ms, 
+    color 800ms
+    ease-in-out;
+}
+
+.edt:hover .label-edt:hover, .label-edt:hover {
+    background-image: linear-gradient(var(--color-3), var(--color-3));
+    background-size: 100% 100%;
+    background-position: 0% 100%;
+    color: var(--color-1);
+    transition: background-position 100ms, 
+    background-size 1400ms, 
+    color 800ms
+    ease-in-out;
+}
+
+.link-edt {
+    margin-right: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: 700;
+    font-size: 24px;
+    border: 0px solid var(--color-4);
+    border-radius: .4rem;
+    border-top-left-radius: 0%;
+    border-bottom-left-radius: 0%;
+    width: 20%;
+    height: 35px;
+    background-image: linear-gradient(var(--color-4), var(--color-4));
+    background-size: 0% 100%;
+    background-color: var(--color-1);
+    background-repeat: no-repeat;
+    background-position: 0% 100%;
+    color: var(--color-5);
+    transition: background-position 500ms,
+    background-size 1000ms, 
+    color 600ms
+    ease-in-out;
+}
+
+.edt:hover .link-edt {
+    background-size: 100% 100%;
+    background-position: 0% 100%;
+    color: var(--color-2);
+    transition: background-position 100ms, 
+    background-size 1400ms, 
+    color 800ms
+    ease-in-out;
+}
+
+.label-num {
+    border-top-right-radius: 0%;
+    border-bottom-right-radius: 0%;
+}
+
+.save-number, .save-user-infos, .save-user-pswrd {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 26px;
+    border: 0px solid var(--color-1);
+    border-radius: 100%;
+    height: 40px;
+    width: 40px;
+    background-image: linear-gradient(var(--color-4), var(--color-4));
+    background-size: 0% 100%;
+    background-color: var(--color-1);
+    background-repeat: no-repeat;
+    background-position: 0% 100%;
+    color: var(--color-5);
+    transition: background-position 500ms,
+    background-size 1000ms, 
+    color 600ms
+    ease-in-out;
+}
+
+.edt:hover .save-number:hover, .save-number:hover, .save-user-infos:hover, .save-user-pswrd:hover {
+    background-image: linear-gradient(var(--color-save), var(--color-save));
+    background-size: 100% 100%;
+    background-position: 0% 100%;
+    color: var(--color-5);
+    transition: background-position 100ms, 
+    background-size 1400ms, 
+    color 800ms
+    ease-in-out;
+}
+
+.edt:hover .save-number {
+    background-size: 100% 100%;
+    background-position: 0% 100%;
+    color: var(--color-2);
+    transition: background-position 100ms, 
+    background-size 1400ms, 
+    color 800ms
+    ease-in-out;
+}
+
+table {
+    margin-top: 20px;
+    border-collapse: separate;
+    border-spacing: 10px;
+}
+
+.pswrd-td {
+    padding-top: 10%;
+}
+
+
+.info-input {
+    margin-left: 5%;
+    font-weight: 700;
+    font-size: 24px;
+    border: 0px solid var(--color-4);
+    border-radius: .4rem;
+    width: 90%;
+    height: 36px;
+    box-shadow: inset 0 0 10px var(--color-0);
+    background-size: 0% 100%;
+    background-color: var(--color-2);
+    background-repeat: no-repeat;
+    background-position: 0% 100%;
+    color: var(--color-5);
+}
+
+.pswrd-input {
+    margin-left: 5%;
+    font-weight: 700;
+    font-size: 24px;
+    border: 0px solid var(--color-4);
+    border-radius: .4rem;
+    width: 90%;
+    height: 36px;
+    box-shadow: inset 0 0 10px var(--color-0);
+    background-size: 0% 100%;
+    background-color: var(--color-2);
+    background-repeat: no-repeat;
+    background-position: 0% 100%;
+}
+
