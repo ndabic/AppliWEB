@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emploi Du Temps</title>
+    <link rel="stylesheet" type="text/css" href="schedule-admin_style.css">
+	<link rel="icon" type="image/png" href="./assets/Logo.png">
+</head>
+<body>
+
+	<div class="header">
+		<h1>&#160;Emploi Du Temps&#160;</h1>
+		
+		<div class="user-container">
+
+
+		
+			<button class="sign-button button-color-1">
+				Connexion
+			</button>
+
+			<button class="sign-button button-color-2">
+				Inscription
+			</button>
+
+		</div>
+	</div>
+	
+	<div class="admin-button">
+		<button onclick="toggleDropdown()" class="add-button">&#160;Ajouter Cours&#160;</button>
+		<div class="dropdown">
+		  
+			  <button onclick="toggleDropdown()" class="add-button drop-button">&#160;Ajouter Autre&#160;</button>
+			  <div id="myDropdown" class="dropdown-content">
+			    <a class="drop-top" onclick="toggleShow('matiere')">&#160;Groupe&#160;</a>
+			    <a onclick="toggleShow('matiere')">&#160;Matière&#160;</a>
+			    <a onclick="toggleShow('salle')">&#160;Salle&#160;</a>
+			    <a class="drop-bottom" onclick="toggleShow('matiere')">&#160;Type&#160;</a>
+			    
+			 </div>
+		</div>
+	
+	</div>
+	
+	<div class="popup-container">
+		<div class="popup">
+			
+	        
+		</div>
+	</div>
+	
+
+	
+	
+
+	<div class="schedule-container">
+	    <div id="schedule"></div>
+	    <div id="cours_container"></div>
+	</div>
+	
+
+<script src="schedule-admin_script.js"></script>
+</body>
+</html>
