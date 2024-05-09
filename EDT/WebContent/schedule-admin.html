@@ -10,17 +10,17 @@
 <body>
 
 	<div class="header">
-		<h1>&#160;Emploi Du Temps&#160;</h1>
+		<h1>Emploi Du Temps</h1>
 		
-		<div class="user-container">
+		<div class="user-container connected">
 
-
+			<div class="user-profile" onclick="location.href='profile.html'">Pierre ALIBERT</div>
 		
-			<button class="sign-button button-color-1">
+			<button class="sign-button button-color-1 hide" onclick="location.href='connexion.html'">
 				Connexion
 			</button>
 
-			<button class="sign-button button-color-2">
+			<button class="sign-button button-color-2 hide" onclick="location.href='inscription.html'">
 				Inscription
 			</button>
 
@@ -28,18 +28,22 @@
 	</div>
 	
 	<div class="admin-button">
-		<button onclick="toggleDropdown()" class="add-button">&#160;Ajouter Cours&#160;</button>
+		<button onclick="toggleShow(this)" class="add-button">Ajouter Cours</button>
 		<div class="dropdown">
 		  
-			  <button onclick="toggleDropdown()" class="add-button drop-button">&#160;Ajouter Autre&#160;</button>
-			  <div id="myDropdown" class="dropdown-content">
-			    <a class="drop-top" onclick="toggleShow('matiere')">&#160;Groupe&#160;</a>
-			    <a onclick="toggleShow('matiere')">&#160;Matière&#160;</a>
-			    <a onclick="toggleShow('salle')">&#160;Salle&#160;</a>
-			    <a class="drop-bottom" onclick="toggleShow('matiere')">&#160;Type&#160;</a>
+			  <button onclick="toggleDropdown('dropdown-div')" class="add-button drop-button">Ajouter Autre</button>
+			  <div id="dropdown-div" class="dropdown-content">
+				<a onclick="toggleShow(this)">Étudiant</a>
+				<a onclick="toggleShow(this)">Professeur</a>
+			    <a onclick="toggleShow(this)">Groupe</a>
+			    <a onclick="toggleShow(this)">Matière</a>
+			    <a onclick="toggleShow(this)">Salle</a>
+			    <a onclick="toggleShow(this)">Type</a>
 			    
 			 </div>
 		</div>
+
+		
 	
 	</div>
 	

@@ -47,9 +47,9 @@ body {
 
 h1 {
     
-    margin: 20px;
+    margin: 20px 20px 10px 20px;
     border-radius: 1rem;
-    padding: 2px;
+    padding: 2px 10px 2px 10px;
     text-align: left;
     color: var(--color-5);
     font-weight: bolder;
@@ -81,6 +81,59 @@ h1 {
     background-color: var(--color-4);
     box-shadow: 0 0 10px var(--color-0);
     border-bottom-left-radius: 1rem;
+    overflow: hidden;
+}
+
+.user-container.connected {
+    background-image: linear-gradient(var(--color-2), var(--color-2));
+    background-size: 0% 100%;
+    background-color: var(--color-4);
+    background-repeat: no-repeat;
+    background-position: 100% 100%;
+    color: var(--color-1);
+    transition: background-position 500ms,
+    background-size 300ms, 
+    margin-left 700ms,
+    color 300ms
+    ease-in-out;
+}
+
+.user-container.connected {
+    cursor: pointer;
+    background-image: linear-gradient(var(--color-2), var(--color-2));
+    background-size: 0% 100%;
+    background-color: var(--color-4);
+    background-repeat: no-repeat;
+    background-position: 100% 100%;
+    color: var(--color-1);
+    transition: background-position 500ms,
+    background-size 600ms, 
+    margin-left 700ms
+    ease-in-out;
+}
+
+.user-container.connected:hover {
+    background-size: 100% 100%;
+    background-position: 110% 100%;
+    color: var(--color-4);
+    transition: background-position 100ms, 
+    background-size 1000ms, 
+    margin-left 700ms
+    ease-in-out;
+}
+
+.user-profile {
+    display: flex;
+    font-size: 18px;
+    font-weight: bold;
+    color: var(--color-1);
+    cursor: pointer;
+    transition: color 300ms ease-in-out;
+}
+
+.user-container.connected:hover .user-profile {
+    color: var(--color-5);
+    transition: color 300ms ease-in-out;
 }
 
 .sign-button {
@@ -170,7 +223,7 @@ h1 {
 .schedule-container {
     border: 4px solid var(--color-2);
     border-radius: 1rem;
-    margin: 40px 20px 0px 20px;
+    margin: 10px 20px 0px 20px;
     padding: 10px;
     width: fit-content;
     background-color: var(--color-4);
@@ -243,7 +296,7 @@ h1 {
     color: var(--color-0);
 }
 
-.hiddenDiv {
+.hide {
 	display: none;
 }
 
@@ -293,6 +346,10 @@ h1 {
     ease-in-out;
 }
 
+.choice-button {
+    margin-bottom: 10px;
+}
+
 /* Dropdown content (hidden by default) */
 .dropdown-content {
   display: none;
@@ -302,10 +359,31 @@ h1 {
   background-color: var(--color-1);
   box-shadow: 0px 0px 16px rgba(0,0,0,0.2);
   z-index: 1;
+  overflow-y: hidden;
 }
 
+.choice-content {
+    display: none;
+    position: absolute;
+    border-radius: .4rem;
+    min-width: fit-content;
+    max-height: 300px;
+    
+    background-color: var(--color-4);
+    box-shadow: 0px 0px 16px rgba(0,0,0,0.2);
+    z-index: 1;
+    overflow-y: scroll;
+}
+
+    /* Hide scrollbar */
+.choice-content::-webkit-scrollbar {
+    display: none;
+}
+
+
+
 /* Links inside the dropdown */
-.dropdown-content a {
+.dropdown-content a, .choice-element {
   
   font-size: 16px;
   padding: 12px;
@@ -327,17 +405,7 @@ h1 {
   ease-in-out;
 }
 
-.drop-top {
-	border-top-left-radius: .4rem;
-	border-top-right-radius: .4rem;
-}
-
-.drop-bottom {
-	border-bottom-left-radius: .4rem;
-	border-bottom-right-radius: .4rem;
-}
-
-.dropdown-content a:hover {
+.dropdown-content a:hover, .choice-element:hover {
     background-size: 100% 100%;
     background-position: 0% 100%;
     color: var(--color-5);
@@ -345,6 +413,13 @@ h1 {
     background-size 600ms, 
     color 800ms
     ease-in-out;
+}
+
+.clicked, .clicked:hover {
+    background-image: linear-gradient(var(--color-1), var(--color-1));
+    background-size: 100% 100%;
+    background-position: 0% 100%;
+    color: var(--color-5);
 }
 
 /* Show the dropdown menu when the user clicks on the dropdown button */
@@ -369,13 +444,24 @@ h1 {
     justify-content: center;
   	align-items: center;
     width: fit-content;
+    /*max-width: 350px;*/
     height: fit-content;
-    padding: 10px 8px 10px 8px;
+    padding: 6px 8px 2px 8px;
     border: 4px solid var(--color-2);
     border-radius: 1rem;
     background-color: var(--color-3);
     box-shadow: 0 0 10px var(--color-0);
 }
+
+.popup-table {
+    border-collapse: separate;
+    border-spacing: 10px 0px ;
+}
+
+
+
+
+
 
 label {
     display: block;
@@ -388,9 +474,10 @@ label {
 
 input[type="text"],
 input[type="password"],
-input[type="submit"] {
-    width: 270px;
-    padding: 10px;
+input[type="submit"],
+input[type="file"] {
+    width: fit-content;
+    padding: 6px;
     margin-bottom: 10px;
     border: 4px solid var(--color-2);
     background-color: var(--color-4);
@@ -401,10 +488,22 @@ input[type="submit"] {
 }
 
 
-input[type="submit"] {
-    border: 4px solid var(--color-1);
+input[type="text"].time-input {
+    width: 20px;
+}
+
+input[type="text"].year-input {
+    width: 40px;
+}
+
+
+input[type="submit"], .button-csv, .choice-button, .time-button {
+    border-radius: 1rem;
+    padding: 10px;
+    border: 0px solid var(--color-1);
     font-size: 16px;
     font-weight: bold;
+    width: fit-content;
     cursor: pointer;
     background-image: linear-gradient(var(--color-1), var(--color-1));
     background-size: 0% 100%;
@@ -418,7 +517,12 @@ input[type="submit"] {
     ease-in-out;
 }
 
-input[type="submit"]:hover {
+.time-button {
+    width: 40px;
+    margin-bottom: 10px;
+}
+
+input[type="submit"]:hover, .button-csv:hover, .choice-button:hover, .time-button:hover {
     cursor: pointer;
     background-size: 100% 100%;
     background-position: 110% 100%;
@@ -429,16 +533,39 @@ input[type="submit"]:hover {
     ease-in-out;
 }
 
+
+
 .error-message {
+    display: flex;
     color: var(--color-1);
     font-size: 16px;
     font-weight: bold;
 }
 
-.input-line {
+.div-line {
 	display: flex;
 	align-items: center;
-	gap: 1rem;
+    justify-content: center;
+    gap: 10px;
+}
+
+.div-column {
+	display: grid;
+	align-items: center;
+    justify-items: center;
+    width: fit-content;
+}
+
+.center-line {
+    display: flex;
+	align-items: center;
+    justify-content: center;
+}
+
+.header-line {
+    position: relative;
+	display: flex;
+    margin-bottom: 5px;
 }
 
 
@@ -461,13 +588,45 @@ input[type="submit"]:hover {
 }
 
 .button-exit {
-	position: relative;
-	top: 1%;
-	right: 1%;
+	position: absolute;
+	top: 0%;
+	right: 0%;
+    border-radius: 100%;
+    height: 30px;
+    width: 30px;
+    border: 0px solid var(--color-1);
+    background-image: linear-gradient(var(--color-danger), var(--color-danger));
+    background-size: 0% 100%;
+    background-color: var(--color-2);
+    background-repeat: no-repeat;
+    background-position: 0% 100%;
+    color: var(--color-5);
+    transition: background-position 500ms,
+    background-size 300ms, 
+    color 300ms
+    ease-in-out;
 }
 
 .button-exit:hover {
-	background-color: var(--color-danger);
+    background-size: 100% 100%;
+    background-position: 0% 100%;
+    color: var(--color-5);
+    transition: background-position 100ms, 
+    background-size 600ms, 
+    color 800ms
+    ease-in-out;
+}
+
+h2 {
+    border-radius: 1rem;
+    padding: 2px 10px 2px 10px;
+    text-align: left;
+    color: var(--color-5);
+    font-weight: bolder;
+    font-size: 20px;
+    width: fit-content;
+    height: fit-content;
+    background-color: var(--color-1);
 }
 
 .button-validate:hover {
