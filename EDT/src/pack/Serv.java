@@ -1,6 +1,7 @@
 package pack;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.Collection;
 
 import javax.servlet.ServletException;
@@ -71,8 +72,48 @@ public class Serv extends HttpServlet {
 		default:
 			response.getWriter().append("Served at: ").append(request.getContextPath());
 			break;
-		}
+	
+		case "ajouterCours":
+			String heureDebut = request.getParameter("heure-cours-debut");
+	        String minuteDebut = request.getParameter("minute-cours-debut");
+	        String heureFin = request.getParameter("heure-cours-fin");
+	        String minuteFin = request.getParameter("minute-cours-fin");
+	        String jour = request.getParameter("jour-cours");
+	        String mois = request.getParameter("mois-cours");
+	        String annee = request.getParameter("annee-cours");
+	        String typeCours = request.getParameter("type-cours");
+	        String matiereCours = request.getParameter("matiere-cours");
+	        String sallesCours = request.getParameter("salles-cours");
+	        String profsCours = request.getParameter("profs-cours");
+	        String groupesCours = request.getParameter("groupes-cours");
+	        String infosSuppCours = request.getParameter("infosupp-cours");
+	
+			facade.ajout_cours(heureDebut, minuteDebut, heureFin, minuteFin, 
+                    jour, mois, annee, typeCours, matiereCours, 
+                    sallesCours, profsCours, groupesCours, infosSuppCours);
+			break;
 		
+		case "addEtudiant":
+			String numero = request.getParameter("num-link");
+	        String prenom = request.getParameter("prenom-link");
+	        String nom = request.getParameter("nom-link");
+	        facade.ajout_etudiant(numero,prenom, nom);
+	        break;
+	        
+		case "addProfesseur":
+			String numero_p = request.getParameter("num-link");
+	        String prenom_p = request.getParameter("prenom-link");
+	        String nom_p = request.getParameter("nom-link");
+	        facade.ajout_prof(numero_p,prenom_p, nom_p);
+	        break;
+	        
+		case "addGroupe":
+            String nomGroupe = request.getParameter("nom-groupe");
+            String fileGroupe = request.getParameter("file-groupe");
+            facade.creer_groupe(nomGroupe,fileGroupe);
+            break;
+		}
+	        
 	}
 
 	/**

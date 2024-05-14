@@ -118,5 +118,51 @@ public class Facade {
 		em.persist(nouveau);
 	}
 	
+	public void ajout_cours(String heureDebut, String minuteDebut, String heureFin, String minuteFin, 
+            String jour, String mois_string, String annee_string, String type, String matiere, 
+            String salle, String professeur, String groupe, String infosupp) {
+		int heuredebut =  Integer.parseInt(heureDebut) ;
+		int minutedebut = Integer.parseInt(minuteDebut);
+		int heurefin = Integer.parseInt(heureFin);
+		int minutefin = Integer.parseInt(minuteFin);
+		int jours = Integer.parseInt(jour);
+		int mois = Integer.parseInt(mois_string);
+		int annee = Integer.parseInt(annee_string);
+		LocalDateTime debut = LocalDateTime.of(annee, mois, jours, heuredebut, minutedebut, 0);
+		LocalDateTime fin = LocalDateTime.of(annee, mois, jours, heurefin, minutefin, 0);
+		
+		Cours cours = new Cours();
+        cours.setDebut(debut);
+        cours.setFin(fin);
+        cours.setGroupes(groupes);
+        cours.setProf(prof);
+        cours.setMatiere(matiere);
+        cours.setType(type);
+        cours.setSalle(salles);
+
+        em.persist(cours);
+	}
+        
+    public void ajout_etudiant(String numero,String prenom,String nom) {
+    	//on crée l'étudiant
+    	Utilisateur etudiant = new Utilisateur();
+    	etudiant.setPrenom(prenom);
+    	etudiant.setNom(nom);
+    
+    
+    }
+    
+    public void ajout_prof(String numero,String prenom,String nom) {
+    	//on crée l'étudiant
+    	Utilisateur prof = new Utilisateur();
+    	prof.setPrenom(prenom);
+    	prof.setNom(nom);
+    
+    
+    }
+    
+    public void creer_groupe(String nom,String liste_etudiant) {}
+     
+	
 	
 }
