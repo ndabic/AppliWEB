@@ -80,14 +80,14 @@ btn1.onmouseleave = event => btn2.classList.remove("sipped");
 const showTime = async () => {
     
     await delay(500);
-    //place_cours("rgba(255, 45, 100, 0.5)", "WEB", "TP", "A002", ["M1", "M2"], ["Daniel", "HAGIMONT"], [[8, 0],[15,45]], 2);
-    /*let cours = document.getElementsByClassName("case_cours");
-    for (let index = 0; index < cours.length; index++) {
-        await delay(waitingTime);
-        const element = cours[index];
-        element.classList.add("print-out");
-        //waitingTime += 20;
-    }*/
+    // place_cours("rgba(255, 45, 100, 0.5)", "WEB", "TP", "A002", ["M1", "M2"],
+	// ["Daniel", "HAGIMONT"], [[8, 0],[15,45]], 2);
+    /*
+	 * let cours = document.getElementsByClassName("case_cours"); for (let index =
+	 * 0; index < cours.length; index++) { await delay(waitingTime); const
+	 * element = cours[index]; element.classList.add("print-out"); //waitingTime +=
+	 * 20; }
+	 */
     
 };
 
@@ -112,13 +112,20 @@ function get_slot(heureDebut){
 
 /**
  * 
- * @param {*string} matiere 
- * @param {*string} type 
- * @param {*string} salle 
- * @param {*string[]} groupes 
- * @param {*string[]} prof 
- * @param {*int[][]} horaire 
- * @param {*int} jour 
+ * @param {*string}
+ *            matiere
+ * @param {*string}
+ *            type
+ * @param {*string}
+ *            salle
+ * @param {*string[]}
+ *            groupes
+ * @param {*string[]}
+ *            prof
+ * @param {*int[][]}
+ *            horaire
+ * @param {*int}
+ *            jour
  */
 function place_cours(couleur, matiere, type, salle, groupes, prof, horaire, jour) {
     
@@ -189,7 +196,7 @@ function place_cours(couleur, matiere, type, salle, groupes, prof, horaire, jour
 
                 
                 
-                //await delay(waitingTime);
+                // await delay(waitingTime);
                 
                 
                 
@@ -201,9 +208,6 @@ function place_cours(couleur, matiere, type, salle, groupes, prof, horaire, jour
     
 }
 
-function submitForm(form) {
-    form.submit();
-}
 
 
 function toggleDropdown(dropdownElement) {
@@ -211,53 +215,27 @@ function toggleDropdown(dropdownElement) {
     dropdown.classList.toggle("show");
 }
 
-function toggleDropdownSendForm(dropdownElement) {
-    var dropdown = document.getElementById(dropdownElement);
-    if (!dropdown.classList.contains("show")){
-        dropdown.classList.add("show");
-    }else{
-        dropdown.classList.remove('show');
-        var form = document.getElementById("getScheduleGroupForm");
-        submitForm(form);
-    }
-    
-}
-
-// Close the dropdown menu if the user clicks outside of it
-window.onclick = function(event) {
-    if (!event.target.matches('.drop-button')) {
-        var dropdowns = document.getElementsByClassName("dropdown-content");
-        for (var i = 0; i < dropdowns.length; i++) {
+	// Close the dropdown menu if the user clicks outside of it
+	window.onclick = function(event) {
+	if (!event.target.matches('.drop-button')) {
+	    var dropdowns = document.getElementsByClassName("dropdown-content");
+	    for (var i = 0; i < dropdowns.length; i++) {
             var openDropdown = dropdowns[i];
             if (openDropdown.classList.contains('show')) {
                 openDropdown.classList.remove('show');
             }
-        }
-    }
+	    }
+	}
     if (!event.target.matches('.choice-button')) {
         var dropdowns = document.getElementsByClassName("choice-content");
         for (var i = 0; i < dropdowns.length; i++) {
             var openDropdown = dropdowns[i];
-            // Check if the dropdown is open and the click is not on the button or within the dropdown
+            // Check if the dropdown is open and the click is not on the button
+			// or within the dropdown
             if (openDropdown.classList.contains('show') && 
                 !openDropdown.contains(event.target) && 
                 !event.target.matches('.choice-button')) {
                 openDropdown.classList.remove('show');
-            }
-        }
-    }
-
-    if (!event.target.matches('.view-button')) {
-        var dropdowns = document.getElementsByClassName("view-content");
-        for (var i = 0; i < dropdowns.length; i++) {
-            var openDropdown = dropdowns[i];
-            // Check if the dropdown is open and the click is not on the button or within the dropdown
-            if (openDropdown.classList.contains('show') && 
-                !openDropdown.contains(event.target) && 
-                !event.target.matches('.view-button')) {
-                openDropdown.classList.remove('show');
-                var form = document.getElementById("getScheduleGroupForm");
-                submitForm(form);
             }
         }
     }
@@ -612,7 +590,7 @@ function toggleShow(self) {
                         <div class="center-line">
                             <input type="submit" value="Ajouter" name="addButton">
                         </div>
-                        <input type="hidden" name="op" value="addGroupe">
+                        <input type="hidden" name="op" value="addCours">
                     </form>
                     <div class="error-message"></div>
                 `;
@@ -719,7 +697,7 @@ function toggleShow(self) {
                         <div class="center-line">
                             <input type="submit" value="Ajouter" name="addButton">
                         </div>
-                        <input type="hidden" name="op" value="addGroupe">
+                        <input type="hidden" name="op" value="addEtudiant">
                     </form>
                     <div class="error-message"></div>
                 `;
@@ -778,7 +756,7 @@ function toggleShow(self) {
                             <div class="center-line">
                                 <input type="submit" value="Ajouter" name="addButton">
                             </div>
-                            <input type="hidden" name="op" value="addGroupe">
+                            <input type="hidden" name="op" value="addProfesseur">
                         </form>
                         <div class="error-message"></div>
                     `;
@@ -841,7 +819,7 @@ function toggleShow(self) {
                         <div class="center-line">
                             <input type="submit" value="Ajouter" name="addButton">
                         </div>
-                        <input type="hidden" name="op" value="addGroupe">
+                        <input type="hidden" name="op" value="addMatiere">
                     </form>
                     <div class="error-message"></div>
                 `;
@@ -874,7 +852,7 @@ function toggleShow(self) {
                         <div class="center-line">
                             <input type="submit" value="Ajouter" name="addButton">
                         </div>
-                        <input type="hidden" name="op" value="addGroupe">
+                        <input type="hidden" name="op" value="addSalle">
                     </form>
                     <div class="error-message"></div>
                 `;
@@ -907,7 +885,7 @@ function toggleShow(self) {
                         <div class="center-line">
                             <input type="submit" value="Ajouter" name="addButton">
                         </div>
-                        <input type="hidden" name="op" value="addGroupe">
+                        <input type="hidden" name="op" value="addType">
                     </form>
                     <div class="error-message"></div>
                 `;
