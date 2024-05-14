@@ -362,7 +362,7 @@ h1 {
   overflow-y: hidden;
 }
 
-.choice-content {
+.choice-content, .view-content {
     display: none;
     position: absolute;
     border-radius: .4rem;
@@ -377,6 +377,10 @@ h1 {
 
     /* Hide scrollbar */
 .choice-content::-webkit-scrollbar {
+    display: none;
+}
+
+.view-content::-webkit-scrollbar {
     display: none;
 }
 

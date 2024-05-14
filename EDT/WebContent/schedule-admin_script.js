@@ -201,6 +201,9 @@ function place_cours(couleur, matiere, type, salle, groupes, prof, horaire, jour
     
 }
 
+function submitForm(form) {
+    form.submit();
+}
 
 
 function toggleDropdown(dropdownElement) {
@@ -208,17 +211,29 @@ function toggleDropdown(dropdownElement) {
     dropdown.classList.toggle("show");
 }
 
-	// Close the dropdown menu if the user clicks outside of it
-	window.onclick = function(event) {
-	if (!event.target.matches('.drop-button')) {
-	    var dropdowns = document.getElementsByClassName("dropdown-content");
-	    for (var i = 0; i < dropdowns.length; i++) {
+function toggleDropdownSendForm(dropdownElement) {
+    var dropdown = document.getElementById(dropdownElement);
+    if (!dropdown.classList.contains("show")){
+        dropdown.classList.add("show");
+    }else{
+        dropdown.classList.remove('show');
+        var form = document.getElementById("getScheduleGroupForm");
+        submitForm(form);
+    }
+    
+}
+
+// Close the dropdown menu if the user clicks outside of it
+window.onclick = function(event) {
+    if (!event.target.matches('.drop-button')) {
+        var dropdowns = document.getElementsByClassName("dropdown-content");
+        for (var i = 0; i < dropdowns.length; i++) {
             var openDropdown = dropdowns[i];
             if (openDropdown.classList.contains('show')) {
                 openDropdown.classList.remove('show');
             }
-	    }
-	}
+        }
+    }
     if (!event.target.matches('.choice-button')) {
         var dropdowns = document.getElementsByClassName("choice-content");
         for (var i = 0; i < dropdowns.length; i++) {
@@ -228,6 +243,21 @@ function toggleDropdown(dropdownElement) {
                 !openDropdown.contains(event.target) && 
                 !event.target.matches('.choice-button')) {
                 openDropdown.classList.remove('show');
+            }
+        }
+    }
+
+    if (!event.target.matches('.view-button')) {
+        var dropdowns = document.getElementsByClassName("view-content");
+        for (var i = 0; i < dropdowns.length; i++) {
+            var openDropdown = dropdowns[i];
+            // Check if the dropdown is open and the click is not on the button or within the dropdown
+            if (openDropdown.classList.contains('show') && 
+                !openDropdown.contains(event.target) && 
+                !event.target.matches('.view-button')) {
+                openDropdown.classList.remove('show');
+                var form = document.getElementById("getScheduleGroupForm");
+                submitForm(form);
             }
         }
     }
