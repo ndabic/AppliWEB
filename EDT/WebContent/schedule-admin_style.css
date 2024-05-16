@@ -479,7 +479,7 @@ label {
 input[type="text"],
 input[type="password"],
 input[type="submit"],
-input[type="file"] {
+input[type="file"], .submit-button {
     width: fit-content;
     padding: 6px;
     margin-bottom: 10px;
@@ -501,7 +501,7 @@ input[type="text"].year-input {
 }
 
 
-input[type="submit"], .button-csv, .choice-button, .time-button {
+input[type="submit"], .button-csv, .choice-button, .time-button, .submit-button {
     border-radius: 1rem;
     padding: 10px;
     border: 0px solid var(--color-1);
@@ -526,7 +526,7 @@ input[type="submit"], .button-csv, .choice-button, .time-button {
     margin-bottom: 10px;
 }
 
-input[type="submit"]:hover, .button-csv:hover, .choice-button:hover, .time-button:hover {
+input[type="submit"]:hover, .button-csv:hover, .choice-button:hover, .time-button:hover, .submit-button:hover {
     cursor: pointer;
     background-size: 100% 100%;
     background-position: 110% 100%;

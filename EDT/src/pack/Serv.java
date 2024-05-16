@@ -1,6 +1,7 @@
 package pack;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.time.LocalDateTime;
 import java.util.Collection;
 
@@ -69,11 +70,16 @@ public class Serv extends HttpServlet {
 			request.getRequestDispatcher("schedule.jsp").forward(request, response);
 			break;
 			
-		default:
-			response.getWriter().append("Served at: ").append(request.getContextPath());
-			break;
+		case "addCours":
+			response.setContentType("text/html");
+	        response.setCharacterEncoding("UTF-8");
+	        PrintWriter out = response.getWriter();
+	        out.print("hello this is a test");
+	        out.flush();
+	        break;
+			
 	
-		case "ajouterCours":
+		case "addCoursqsjd":
 			String heureDebut = request.getParameter("heure-cours-debut");
 	        String minuteDebut = request.getParameter("minute-cours-debut");
 	        String heureFin = request.getParameter("heure-cours-fin");
@@ -112,6 +118,10 @@ public class Serv extends HttpServlet {
             String fileGroupe = request.getParameter("file-groupe");
             facade.creer_groupe(nomGroupe,fileGroupe);
             break;
+            
+		default:
+			response.getWriter().append("Served at: ").append(request.getContextPath());
+			break;
 		}
 	        
 	}

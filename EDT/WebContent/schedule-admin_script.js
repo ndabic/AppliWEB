@@ -80,14 +80,14 @@ btn1.onmouseleave = event => btn2.classList.remove("sipped");
 const showTime = async () => {
     
     await delay(500);
-    // place_cours("rgba(255, 45, 100, 0.5)", "WEB", "TP", "A002", ["M1", "M2"],
-	// ["Daniel", "HAGIMONT"], [[8, 0],[15,45]], 2);
-    /*
-	 * let cours = document.getElementsByClassName("case_cours"); for (let index =
-	 * 0; index < cours.length; index++) { await delay(waitingTime); const
-	 * element = cours[index]; element.classList.add("print-out"); //waitingTime +=
-	 * 20; }
-	 */
+    place_cours("rgba(255, 45, 100, 0.5)", "WEB", "TP", "A002", ["M1", "M2"], ["Daniel", "HAGIMONT"], [[8, 0],[15,45]], 2);
+    /*let cours = document.getElementsByClassName("case_cours");
+    for (let index = 0; index < cours.length; index++) {
+        await delay(waitingTime);
+        const element = cours[index];
+        element.classList.add("print-out");
+        //waitingTime += 20;
+    }*/
     
 };
 
@@ -112,20 +112,13 @@ function get_slot(heureDebut){
 
 /**
  * 
- * @param {*string}
- *            matiere
- * @param {*string}
- *            type
- * @param {*string}
- *            salle
- * @param {*string[]}
- *            groupes
- * @param {*string[]}
- *            prof
- * @param {*int[][]}
- *            horaire
- * @param {*int}
- *            jour
+ * @param {*string} matiere 
+ * @param {*string} type 
+ * @param {*string} salle 
+ * @param {*string[]} groupes 
+ * @param {*string[]} prof 
+ * @param {*int[][]} horaire 
+ * @param {*int} jour 
  */
 function place_cours(couleur, matiere, type, salle, groupes, prof, horaire, jour) {
     
@@ -196,7 +189,7 @@ function place_cours(couleur, matiere, type, salle, groupes, prof, horaire, jour
 
                 
                 
-                // await delay(waitingTime);
+                //await delay(waitingTime);
                 
                 
                 
@@ -208,6 +201,26 @@ function place_cours(couleur, matiere, type, salle, groupes, prof, horaire, jour
     
 }
 
+function submitForm(form) {
+    form.submit();
+}
+
+
+function submitFormAjax(formID) {
+    document.getElementById('h1').innerText = "hello";	        
+	/*document.getElementById(formID).addEventListener('submit', function(event) {
+	    event.preventDefault(); // Prevent the form from submitting the traditional way
+	    
+	    var formData = new FormData(this); // Create a FormData object from the form
+	    
+	    var xhttp = new XMLHttpRequest();
+	    xhttp.open("GET", "/Serv", true); // Adjust the URL to your server's endpoint
+	    xhttp.onload = function() {
+	        document.getElementById('h1').innerText = "hello";	        
+	    };
+	    xhttp.send(formData); // Send the form data
+	});*/
+}
 
 
 function toggleDropdown(dropdownElement) {
@@ -215,27 +228,53 @@ function toggleDropdown(dropdownElement) {
     dropdown.classList.toggle("show");
 }
 
-	// Close the dropdown menu if the user clicks outside of it
-	window.onclick = function(event) {
-	if (!event.target.matches('.drop-button')) {
-	    var dropdowns = document.getElementsByClassName("dropdown-content");
-	    for (var i = 0; i < dropdowns.length; i++) {
+function toggleDropdownSendForm(dropdownElement) {
+    var dropdown = document.getElementById(dropdownElement);
+    if (!dropdown.classList.contains("show")){
+        dropdown.classList.add("show");
+    }else{
+        dropdown.classList.remove('show');
+        var form = document.getElementById("getScheduleGroupForm");
+        submitForm(form);
+    }
+    
+}
+
+// Close the dropdown menu if the user clicks outside of it
+window.onclick = function(event) {
+    if (!event.target.matches('.drop-button')) {
+        var dropdowns = document.getElementsByClassName("dropdown-content");
+        for (var i = 0; i < dropdowns.length; i++) {
             var openDropdown = dropdowns[i];
             if (openDropdown.classList.contains('show')) {
                 openDropdown.classList.remove('show');
             }
-	    }
-	}
+        }
+    }
     if (!event.target.matches('.choice-button')) {
         var dropdowns = document.getElementsByClassName("choice-content");
         for (var i = 0; i < dropdowns.length; i++) {
             var openDropdown = dropdowns[i];
-            // Check if the dropdown is open and the click is not on the button
-			// or within the dropdown
+            // Check if the dropdown is open and the click is not on the button or within the dropdown
             if (openDropdown.classList.contains('show') && 
                 !openDropdown.contains(event.target) && 
                 !event.target.matches('.choice-button')) {
                 openDropdown.classList.remove('show');
+            }
+        }
+    }
+
+    if (!event.target.matches('.view-button')) {
+        var dropdowns = document.getElementsByClassName("view-content");
+        for (var i = 0; i < dropdowns.length; i++) {
+            var openDropdown = dropdowns[i];
+            // Check if the dropdown is open and the click is not on the button or within the dropdown
+            if (openDropdown.classList.contains('show') && 
+                !openDropdown.contains(event.target) && 
+                !event.target.matches('.view-button')) {
+                openDropdown.classList.remove('show');
+                var form = document.getElementById("getScheduleGroupForm");
+                submitForm(form);
             }
         }
     }
@@ -254,12 +293,12 @@ function validateForm(popupInfo) {
                 var profs = document.forms["addCoursForm"]["profs-cours"].value;
                 var groupes = document.forms["addCoursForm"]["groupes-cours"].value;
 
-                if (!(csvFile == "" ^ (type == "" || matiere == "" || salles == "" || profs == "" || groupes == ""))) {
+                /*if (!(csvFile == "" ^ (type == "" || matiere == "" || salles == "" || profs == "" || groupes == ""))) {
                     var errorMessage = document.querySelector(".error-message");
                     errorMessage.innerHTML = "Fichier CSV OU Champs obligatoires";
 
                     return false;
-                }
+                }*/
             break;
 
         case 'Étudiant':
@@ -438,7 +477,7 @@ function toggleShow(self) {
                         <h2 class="title-${popupInfo}">${popupInfo}</h2>
                         <button onclick="toggleShow(this)" class="button-exit">X</button>
                     </div>
-                    <form name="addCoursForm" method="post" action="Serv" onsubmit="return validateForm('${popupInfo}')">
+                    <form id="addCoursForm" name="addCoursForm" method="post" action="Serv" onsubmit="return validateForm('${popupInfo}')">
                         <table class="popup-table">
                         
                             <tr>
@@ -596,6 +635,8 @@ function toggleShow(self) {
                 `;
 
             togglePopUp = true;
+            //submitFormAjax('addCoursForm');
+                
             var optionalInputs = document.querySelectorAll(".optional-input");
             optionalInputs.forEach(input => {
                 input.style.color = "var(--color-4)";
@@ -697,7 +738,7 @@ function toggleShow(self) {
                         <div class="center-line">
                             <input type="submit" value="Ajouter" name="addButton">
                         </div>
-                        <input type="hidden" name="op" value="addEtudiant">
+                        <input type="hidden" name="op" value="addGroupe">
                     </form>
                     <div class="error-message"></div>
                 `;
@@ -756,7 +797,7 @@ function toggleShow(self) {
                             <div class="center-line">
                                 <input type="submit" value="Ajouter" name="addButton">
                             </div>
-                            <input type="hidden" name="op" value="addProfesseur">
+                            <input type="hidden" name="op" value="addGroupe">
                         </form>
                         <div class="error-message"></div>
                     `;
@@ -819,7 +860,7 @@ function toggleShow(self) {
                         <div class="center-line">
                             <input type="submit" value="Ajouter" name="addButton">
                         </div>
-                        <input type="hidden" name="op" value="addMatiere">
+                        <input type="hidden" name="op" value="addGroupe">
                     </form>
                     <div class="error-message"></div>
                 `;
@@ -850,9 +891,9 @@ function toggleShow(self) {
                             </tr>
                         </table>
                         <div class="center-line">
-                            <input type="submit" value="Ajouter" name="addButton">
+                           <input type="submit" value="Ajouter" name="addButton">
                         </div>
-                        <input type="hidden" name="op" value="addSalle">
+                        <input type="hidden" name="op" value="addGroupe">
                     </form>
                     <div class="error-message"></div>
                 `;
@@ -885,7 +926,7 @@ function toggleShow(self) {
                         <div class="center-line">
                             <input type="submit" value="Ajouter" name="addButton">
                         </div>
-                        <input type="hidden" name="op" value="addType">
+                        <input type="hidden" name="op" value="addGroupe">
                     </form>
                     <div class="error-message"></div>
                 `;
@@ -916,5 +957,4 @@ function toggleShow(self) {
         
 	
 }
-
 
