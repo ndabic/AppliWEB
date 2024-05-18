@@ -2,9 +2,14 @@ package pack;
 
 import javax.ejb.Singleton;
 import javax.persistence.*;
+import javax.servlet.http.Part;
 
 import java.time.*;
 import java.util.*;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 
 @Singleton
 public class Facade {
@@ -118,27 +123,63 @@ public class Facade {
 		em.persist(nouveau);
 	}
 	
-	public void ajout_cours(String heureDebut, String minuteDebut, String heureFin, String minuteFin, 
-            String jour, String mois_string, String annee_string, String type, String matiere, 
-            String salle, String professeur, String groupe, String infosupp) {
-		int heuredebut =  Integer.parseInt(heureDebut) ;
-		int minutedebut = Integer.parseInt(minuteDebut);
-		int heurefin = Integer.parseInt(heureFin);
-		int minutefin = Integer.parseInt(minuteFin);
-		int jours = Integer.parseInt(jour);
+	public void ajout_cours(String heureDebut_string, String minuteDebut_string, String heureFin_string, String minuteFin_string, 
+            String jour_string, String mois_string, String annee_string, String type_string, String matiere_string, 
+            String salle_string, String professeur_string, String groupe_string, String infosupp_string) {
+		int heuredebut =  Integer.parseInt(heureDebut_string) ;
+		int minutedebut = Integer.parseInt(minuteDebut_string);
+		int heurefin = Integer.parseInt(heureFin_string);
+		int minutefin = Integer.parseInt(minuteFin_string);
+		int jours = Integer.parseInt(jour_string);
 		int mois = Integer.parseInt(mois_string);
 		int annee = Integer.parseInt(annee_string);
 		LocalDateTime debut = LocalDateTime.of(annee, mois, jours, heuredebut, minutedebut, 0);
 		LocalDateTime fin = LocalDateTime.of(annee, mois, jours, heurefin, minutefin, 0);
+		String[] groupes = groupe_string.split(",");
+		String[] salles = salle_string.split(",");
+		String[] profs = professeur_string.split(",");
 		
+		
+		Collection<Groupe> list_groupe = new ArrayList<Groupe>();
+		for(String g_string : groupes) {
+			try {
+			Groupe g = em.find(Groupe.class, g_string);
+			list_groupe.add(g);
+			} catch(Exception e) {
+				System.out.println("Aucun nom ayant ce groupe n'existe");
+			}
+		}
+		
+		Collection<LinkUtilEDT> list_profs = new ArrayList<LinkUtilEDT>();
+		for(String prof_string : profs) {
+			try {
+			LinkUtilEDT p = em.find(LinkUtilEDT.class, prof_string);
+			list_profs.add(p);
+			} catch(Exception e) {
+				System.out.println("Aucun prof ayant ce nom n'existe");
+			}
+		}
+		
+		Collection<Salle> list_salles = new ArrayList<Salle>();
+		for(String s_string : salles) {
+			try {
+			Salle s = em.find(Salle.class, s_string);
+			list_salles.add(s);
+			} catch(Exception e) {
+				System.out.println("Aucune salle ayant ce nom n'existe");
+			}
+		}
+		
+		Matiere matiere = em.find(Matiere.class,matiere_string);
+		Type type = em.find(Type.class, type_string);
 		Cours cours = new Cours();
         cours.setDebut(debut);
         cours.setFin(fin);
-        cours.setGroupes(groupes);
-        cours.setProf(prof);
+        cours.setGroupes(list_groupe);
+        cours.setProf(list_profs);
         cours.setMatiere(matiere);
         cours.setType(type);
-        cours.setSalle(salles);
+        cours.setSalle(list_salles);
 
         em.persist(cours);
 	}
@@ -161,8 +202,26 @@ public class Facade {
     
     }
     
-    public void creer_groupe(String nom,String liste_etudiant) {}
-     
-	
-	
+    public void creer_groupe(String nom, Part liste_etudiant_csv) {
+    	Groupe groupe = new Groupe();
+    	groupe.setNom(nom);
+    	Collection<LinkUtilEDT> liste_eleves = new ArrayList<LinkUtilEDT>();
+    	
+    	BufferedReader reader;
+		try {
+			reader = new BufferedReader(new InputStreamReader(liste_etudiant_csv.getInputStream()));
+			String ligne;
+			while ((ligne = reader.readLine()) != null) {
+			    // Traitement des lignes du fichier CSV
+			    String[] elements = ligne.split(",");
+
+			    LinkUtilEDT code_eleve = em.find(LinkUtilEDT.class,elements[0]);
+			    liste_eleves.add(code_eleve);
+			}
+		}  catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    }
 }
+    
