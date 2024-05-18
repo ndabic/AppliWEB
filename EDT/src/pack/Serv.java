@@ -1,5 +1,6 @@
 package pack;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.time.LocalDateTime;
@@ -31,11 +32,25 @@ public class Serv extends HttpServlet {
         super();
         // TODO Auto-generated constructor stub
     }
+    
+    private void printRequest(HttpServletRequest request) {
+    	try (BufferedReader reader = request.getReader()) {
+			String requestBody = "";
+            String line;
+            while ((line = reader.readLine()) != null) {
+                requestBody += line+"\n";
+            }
+            System.out.println(requestBody);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		//printRequest(request);
 		String op = request.getParameter("op");
 		switch (op) {
 		case "inscription":
@@ -74,7 +89,7 @@ public class Serv extends HttpServlet {
 			response.setContentType("text/html");
 	        response.setCharacterEncoding("UTF-8");
 	        PrintWriter out = response.getWriter();
-	        out.print("hello this is a test");
+	        out.print("hello this is another test.");
 	        out.flush();
 	        break;
 			

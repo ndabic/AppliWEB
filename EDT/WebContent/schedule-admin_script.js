@@ -206,20 +206,26 @@ function submitForm(form) {
 }
 
 
-function submitFormAjax(formID) {
-    document.getElementById('h1').innerText = "hello";	        
-	/*document.getElementById(formID).addEventListener('submit', function(event) {
-	    event.preventDefault(); // Prevent the form from submitting the traditional way
-	    
-	    var formData = new FormData(this); // Create a FormData object from the form
-	    
-	    var xhttp = new XMLHttpRequest();
-	    xhttp.open("GET", "/Serv", true); // Adjust the URL to your server's endpoint
-	    xhttp.onload = function() {
-	        document.getElementById('h1').innerText = "hello";	        
-	    };
-	    xhttp.send(formData); // Send the form data
-	});*/
+function submitFormAjax(formID) {        
+    var form = document.getElementById(formID);
+
+    var formData = new FormData(form); // Serialize form data
+
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "Serv", true);
+    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8"); // Set content type
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState === XMLHttpRequest.DONE) {
+            if (xhr.status === 200) {
+                // Request succeeded
+                document.querySelector("h1").innerHTML = xhr.responseText;
+            } else {
+                // Request failed
+                console.error("Request failed with status:", xhr.status);
+            }
+        }
+    };
+    xhr.send(new URLSearchParams(formData)); // Send form data
 }
 
 
@@ -293,12 +299,12 @@ function validateForm(popupInfo) {
                 var profs = document.forms["addCoursForm"]["profs-cours"].value;
                 var groupes = document.forms["addCoursForm"]["groupes-cours"].value;
 
-                /*if (!(csvFile == "" ^ (type == "" || matiere == "" || salles == "" || profs == "" || groupes == ""))) {
+                if (!(csvFile == "" ^ (type == "" || matiere == "" || salles == "" || profs == "" || groupes == ""))) {
                     var errorMessage = document.querySelector(".error-message");
                     errorMessage.innerHTML = "Fichier CSV OU Champs obligatoires";
 
                     return false;
-                }*/
+                }
             break;
 
         case 'Étudiant':
@@ -627,7 +633,7 @@ function toggleShow(self) {
                             </tr>
                         </table>
                         <div class="center-line">
-                            <input type="submit" value="Ajouter" name="addButton">
+                            <button type="button" class="submit-button" onclick="submitFormAjax('addCoursForm')">Ajouter</button>
                         </div>
                         <input type="hidden" name="op" value="addCours">
                     </form>
@@ -715,7 +721,7 @@ function toggleShow(self) {
                         <h2 class="title-${popupInfo}">${popupInfo}</h2>
                         <button onclick="toggleShow(this)" class="button-exit">X</button>
                     </div>
-                    <form name="addLinkForm" method="post" action="Serv" onsubmit="return validateForm('${popupInfo}')">
+                    <form id="addLinkForm" name="addLinkForm" method="post" action="Serv" onsubmit="return validateForm('${popupInfo}')">
                         <table class="popup-table">
                             <tr>
                                 <td><label for="num-link">Numéro:</label></td>
@@ -736,9 +742,9 @@ function toggleShow(self) {
                             </tr>
                         </table>
                         <div class="center-line">
-                            <input type="submit" value="Ajouter" name="addButton">
+                            <button type="button" class="submit-button" onclick="submitFormAjax('addLinkForm')">Ajouter</button>
                         </div>
-                        <input type="hidden" name="op" value="addGroupe">
+                        <input type="hidden" name="op" value="addEtudiant">
                     </form>
                     <div class="error-message"></div>
                 `;
@@ -773,7 +779,7 @@ function toggleShow(self) {
                             <h2 class="title-${popupInfo}">${popupInfo}</h2>
                             <button onclick="toggleShow(this)" class="button-exit">X</button>
                         </div>
-                        <form name="addLinkForm" method="post" action="Serv" onsubmit="return validateForm('${popupInfo}')">
+                        <form id="addLinkForm" name="addLinkForm" method="post" action="Serv" onsubmit="return validateForm('${popupInfo}')">
                             <table class="popup-table">
                                 <tr>
                                     <td><label for="num-link">Numéro:</label></td>
@@ -795,9 +801,9 @@ function toggleShow(self) {
                                 </tr>
                             </table>
                             <div class="center-line">
-                                <input type="submit" value="Ajouter" name="addButton">
+                            	<button type="button" class="submit-button" onclick="submitFormAjax('addLinkForm')">Ajouter</button>
                             </div>
-                            <input type="hidden" name="op" value="addGroupe">
+                            <input type="hidden" name="op" value="addProfesseur">
                         </form>
                         <div class="error-message"></div>
                     `;
@@ -812,7 +818,7 @@ function toggleShow(self) {
                         <h2 class="title-${popupInfo}">${popupInfo}</h2>
                         <button onclick="toggleShow(this)" class="button-exit">X</button>
                     </div>
-                    <form name="addGroupeForm" method="post" action="Serv" onsubmit="return validateForm('${popupInfo}')">
+                    <form id="addGroupeForm" name="addGroupeForm" method="post" action="Serv" onsubmit="return validateForm('${popupInfo}')">
                         <table class="popup-table">
                             <tr>
                                 <td><label for="nom-groupe">Nom:</label></td>
@@ -825,7 +831,7 @@ function toggleShow(self) {
                             </tr>
                         </table>
                         <div class="center-line">
-                            <input type="submit" value="Ajouter" name="addButton">
+                            <button type="button" class="submit-button" onclick="submitFormAjax('addGroupeForm')">Ajouter</button>
                         </div>
                         <input type="hidden" name="op" value="addGroupe">
                     </form>
@@ -842,7 +848,7 @@ function toggleShow(self) {
                         <h2 class="title-${popupInfo}">${popupInfo}</h2>
                         <button onclick="toggleShow(this)" class="button-exit">X</button>
                     </div>
-                    <form name="addMatiereForm" method="post" action="Serv" onsubmit="return validateForm('${popupInfo}')">
+                    <form id="addMatiereForm" name="addMatiereForm" method="post" action="Serv" onsubmit="return validateForm('${popupInfo}')">
                         <table class="popup-table">
                             <tr>
                                 <td><label for="file-matiere0">Liste des matières:</label></td>
@@ -858,9 +864,9 @@ function toggleShow(self) {
                             </tr>
                         </table>
                         <div class="center-line">
-                            <input type="submit" value="Ajouter" name="addButton">
+                            <button type="button" class="submit-button" onclick="submitFormAjax('addMatiereForm')">Ajouter</button>
                         </div>
-                        <input type="hidden" name="op" value="addGroupe">
+                        <input type="hidden" name="op" value="addMatiere">
                     </form>
                     <div class="error-message"></div>
                 `;
@@ -875,7 +881,7 @@ function toggleShow(self) {
                         <h2 class="title-${popupInfo}">${popupInfo}</h2>
                         <button onclick="toggleShow(this)" class="button-exit">X</button>
                     </div>
-                    <form name="addSalleForm" method="post" action="Serv" onsubmit="return validateForm('${popupInfo}')">
+                    <form id="addSalleForm" name="addSalleForm" method="post" action="Serv" onsubmit="return validateForm('${popupInfo}')">
                         <table class="popup-table">
                             <tr>
                                 <td><label for="file-salle0">Liste des salles:</label></td>
@@ -891,9 +897,9 @@ function toggleShow(self) {
                             </tr>
                         </table>
                         <div class="center-line">
-                           <input type="submit" value="Ajouter" name="addButton">
+                            <button type="button" class="submit-button" onclick="submitFormAjax('addSalleForm')">Ajouter</button>
                         </div>
-                        <input type="hidden" name="op" value="addGroupe">
+                        <input type="hidden" name="op" value="addSalle">
                     </form>
                     <div class="error-message"></div>
                 `;
@@ -908,7 +914,7 @@ function toggleShow(self) {
                         <h2 class="title-${popupInfo}">${popupInfo}</h2>
                         <button onclick="toggleShow(this)" class="button-exit">X</button>
                     </div>
-                    <form name="addTypeForm" method="post" action="Serv" onsubmit="return validateForm('${popupInfo}')">
+                    <form id="addTypeForm" name="addTypeForm" method="post" action="Serv" onsubmit="return validateForm('${popupInfo}')">
                         <table class="popup-table">
                             <tr>
                                 <td><label for="file-type0">Liste des types:</label></td>
@@ -924,9 +930,9 @@ function toggleShow(self) {
                             </tr>
                         </table>
                         <div class="center-line">
-                            <input type="submit" value="Ajouter" name="addButton">
+                            <button type="button" class="submit-button" onclick="submitFormAjax('addTypeForm')">Ajouter</button>
                         </div>
-                        <input type="hidden" name="op" value="addGroupe">
+                        <input type="hidden" name="op" value="addType">
                     </form>
                     <div class="error-message"></div>
                 `;
