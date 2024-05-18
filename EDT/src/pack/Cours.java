@@ -17,7 +17,7 @@ public class Cours {
 	Collection<Groupe> groupes;
 	
 	@ManyToOne
-	LinkUtilEDT prof; // lie le prof grâce à son numéro
+	Collection<LinkUtilEDT> prof; // lie le prof grâce à son numéro
 	
 
 	@ManyToOne
@@ -27,7 +27,7 @@ public class Cours {
 	Type type;
 	
 	@ManyToOne
-	Salle salle;
+	Collection<Salle> salle;
 	
 	@ManyToOne
 	Edt edt_associe;
@@ -42,11 +42,11 @@ public class Cours {
 		this.groupes = groupes;
 	}
 
-	public LinkUtilEDT getProf() {
+	public Collection<LinkUtilEDT> getProf() {
 		return prof;
 	}
 
-	public void setProf(LinkUtilEDT prof) {
+	public void setProf(Collection<LinkUtilEDT> prof) {
 		this.prof = prof;
 	}
 	
@@ -90,11 +90,11 @@ public class Cours {
 		this.type = type;
 	}
 
-	public Salle getSalle() {
+	public Collection<Salle> getSalle() {
 		return salle;
 	}
 
-	public void setSalle(Salle salle) {
+	public void setSalle(Collection<Salle> salle) {
 		this.salle = salle;
 	}
 

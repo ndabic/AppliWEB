@@ -11,6 +11,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.Part;
 import javax.ejb.*;
 
 /**
@@ -130,7 +131,7 @@ public class Serv extends HttpServlet {
 	        
 		case "addGroupe":
             String nomGroupe = request.getParameter("nom-groupe");
-            String fileGroupe = request.getParameter("file-groupe");
+            Part fileGroupe = request.getPart("file-groupe");
             facade.creer_groupe(nomGroupe,fileGroupe);
             break;
             
