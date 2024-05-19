@@ -16,6 +16,9 @@ public class Groupe {
 	@ManyToMany(mappedBy ="groupes", fetch=FetchType.EAGER)
 	Collection<Cours> cours_etude;
 	
+	@ManyToOne
+	Edt edt_associe;
+	
 	public Groupe() {}
 
 	public String getNom() {
@@ -41,5 +44,15 @@ public class Groupe {
 	public void setMembres(Collection<LinkUtilEDT> membres) {
 		this.membres = membres;
 	}
+
+	public Edt getEdt_associe() {
+		return edt_associe;
+	}
+
+	public void setEdt_associe(Edt edt_associe) {
+		this.edt_associe = edt_associe;
+	}
+	
+	
 
 }

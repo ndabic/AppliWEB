@@ -13,6 +13,9 @@ public class Matiere {
 	@OneToMany(mappedBy ="matiere", fetch=FetchType.EAGER)
 	Collection<Cours> cours_associes;
 	
+	@ManyToOne
+	Edt edt_associe;
+	
 	String couleur;
 	
 	public Matiere() {}
@@ -39,6 +42,14 @@ public class Matiere {
 
 	public void setCouleur(String couleur) {
 		this.couleur = couleur;
+	}
+
+	public Edt getEdt_associe() {
+		return edt_associe;
+	}
+
+	public void setEdt_associe(Edt edt_associe) {
+		this.edt_associe = edt_associe;
 	}
 	
 	

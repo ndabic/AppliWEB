@@ -20,6 +20,18 @@ public class Edt {
 	
 	@OneToMany(mappedBy = "edt_associe", fetch=FetchType.EAGER)
 	Collection<Cours> cours;
+	
+	@OneToMany(mappedBy = "edt_associe", fetch=FetchType.EAGER)
+	Collection<Matiere> matieres;
+	
+	@OneToMany(mappedBy = "edt_associe", fetch=FetchType.EAGER)
+	Collection<Type> types;
+	
+	@OneToMany(mappedBy = "edt_associe", fetch=FetchType.EAGER)
+	Collection<Groupe> groupes;
+	
+	@OneToMany(mappedBy = "edt_associe", fetch=FetchType.EAGER)
+	Collection<Salle> salles;
 
 	public Edt() {}
 	
@@ -70,6 +82,46 @@ public class Edt {
 
 	public void setCours(Collection<Cours> cours) {
 		this.cours = cours;
+	}
+
+	public Collection<LinkUtilEDT> getLiens_utilisateur() {
+		return liens_utilisateur;
+	}
+
+	public void setLiens_utilisateur(Collection<LinkUtilEDT> liens_utilisateur) {
+		this.liens_utilisateur = liens_utilisateur;
+	}
+
+	public Collection<Matiere> getMatieres() {
+		return matieres;
+	}
+
+	public void setMatieres(Collection<Matiere> matieres) {
+		this.matieres = matieres;
+	}
+
+	public Collection<Type> getTypes() {
+		return types;
+	}
+
+	public void setTypes(Collection<Type> types) {
+		this.types = types;
+	}
+
+	public Collection<Groupe> getGroupes() {
+		return groupes;
+	}
+
+	public void setGroupes(Collection<Groupe> groupes) {
+		this.groupes = groupes;
+	}
+
+	public Collection<Salle> getSalles() {
+		return salles;
+	}
+
+	public void setSalles(Collection<Salle> salles) {
+		this.salles = salles;
 	}
 	
 	

@@ -7,37 +7,34 @@ import javax.persistence.*;
 @Entity
 public class LinkUtilEDT {
 
-	@Id @GeneratedValue
-	int id;
 	
+	@Id
+	String numero; //numero Carte Etudiant
 	
-	int numero; //numero Carte Etudiant
+	@ManyToOne
+	Edt edt;
+	
+	String prenom;
+	String nom;
 	
 	@ManyToOne
 	Utilisateur utilisateur;
 	
-	@ManyToOne
-	Edt edt;
+	
 	
 	@ManyToMany(mappedBy = "prof", fetch=FetchType.EAGER)
 	Collection<Cours> enseigne;
 	
 	@ManyToMany
 	Collection<Groupe> groupes;
+	
+	Boolean isProf;
 
-	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
-	}
-
-	public int getNumero() {
+	public String getNumero() {
 		return numero;
 	}
 
-	public void setNumero(int numero) {
+	public void setNumero(String numero) {
 		this.numero = numero;
 	}
 
@@ -71,6 +68,30 @@ public class LinkUtilEDT {
 
 	public void setGroupes(Collection<Groupe> groupes) {
 		this.groupes = groupes;
+	}
+
+	public Boolean getIsProf() {
+		return isProf;
+	}
+
+	public void setIsProf(Boolean isProf) {
+		this.isProf = isProf;
+	}
+
+	public String getPrenom() {
+		return prenom;
+	}
+
+	public void setPrenom(String prenom) {
+		this.prenom = prenom;
+	}
+
+	public String getNom() {
+		return nom;
+	}
+
+	public void setNom(String nom) {
+		this.nom = nom;
 	}
 	
 	

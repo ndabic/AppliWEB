@@ -86,7 +86,7 @@ public class Serv extends HttpServlet {
 			request.getRequestDispatcher("schedule.jsp").forward(request, response);
 			break;
 			
-		case "addCours":
+		case "reponseTypeAJAX":
 			response.setContentType("text/html");
 	        response.setCharacterEncoding("UTF-8");
 	        PrintWriter out = response.getWriter();
@@ -95,7 +95,7 @@ public class Serv extends HttpServlet {
 	        break;
 			
 	
-		case "addCoursqsjd":
+		case "addCours":
 			String heureDebut = request.getParameter("heure-cours-debut");
 	        String minuteDebut = request.getParameter("minute-cours-debut");
 	        String heureFin = request.getParameter("heure-cours-fin");
@@ -109,30 +109,47 @@ public class Serv extends HttpServlet {
 	        String profsCours = request.getParameter("profs-cours");
 	        String groupesCours = request.getParameter("groupes-cours");
 	        String infosSuppCours = request.getParameter("infosupp-cours");
-	
-			facade.ajout_cours(heureDebut, minuteDebut, heureFin, minuteFin, 
+	        String edtCours = request.getParameter("edt");
+	        
+	        String res = facade.verif_cours(heureDebut, minuteDebut, heureFin, minuteFin, 
                     jour, mois, annee, typeCours, matiereCours, 
-                    sallesCours, profsCours, groupesCours, infosSuppCours);
+                    sallesCours, profsCours, groupesCours, infosSuppCours, edtCours);
+	        
+	        if (res == null) {
+	        	facade.ajout_cours(heureDebut, minuteDebut, heureFin, minuteFin, 
+                    jour, mois, annee, typeCours, matiereCours, 
+                    sallesCours, profsCours, groupesCours, infosSuppCours, edtCours);
+	        }else {
+	        	response.setContentType("text/html");
+		        response.setCharacterEncoding("UTF-8");
+		        PrintWriter outCours = response.getWriter();
+		        outCours.print(res);
+		        outCours.flush();
+	        }
+			
 			break;
 		
 		case "addEtudiant":
 			String numero = request.getParameter("num-link");
 	        String prenom = request.getParameter("prenom-link");
 	        String nom = request.getParameter("nom-link");
-	        facade.ajout_etudiant(numero,prenom, nom);
+	        String edt = request.getParameter("edt");
+	        facade.ajout_etudiant(numero,prenom, nom, edt);
 	        break;
 	        
 		case "addProfesseur":
 			String numero_p = request.getParameter("num-link");
 	        String prenom_p = request.getParameter("prenom-link");
 	        String nom_p = request.getParameter("nom-link");
-	        facade.ajout_prof(numero_p,prenom_p, nom_p);
+	        String edt_p = request.getParameter("edt");
+	        facade.ajout_prof(numero_p,prenom_p, nom_p, edt_p);
 	        break;
 	        
 		case "addGroupe":
             String nomGroupe = request.getParameter("nom-groupe");
             Part fileGroupe = request.getPart("file-groupe");
-            facade.creer_groupe(nomGroupe,fileGroupe);
+            String edtGroupe = request.getParameter("edt");
+            facade.creer_groupe(nomGroupe,fileGroupe, edtGroupe);
             break;
             
 		default:

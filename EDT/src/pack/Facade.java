@@ -93,25 +93,139 @@ public class Facade {
 	}
 	
 	public boolean verif_doublon_utilisateur(String mail_utilisateur) {
-		if (em.find(Utilisateur.class, mail_utilisateur) != null) {
-			return false;
-		} else {
-			return true;
-		}
+		return (em.find(Utilisateur.class, mail_utilisateur) == null);
 	}
+	
+	public boolean verif_doublon_linkUtilEdt(String numero, String edt) {
+		return true;
+	}
+	
+	
 	
 	public boolean verif_connexion(String mail_utilisateur,String mdp) {
 		Utilisateur utilisateur = em.find(Utilisateur.class, mail_utilisateur);
-		if (utilisateur != null) {
-			if (mdp.equals(utilisateur.getMdp())){
-				return true;
-			} else {
-				return false;
-			}
-		} else { 
-			return false;
-		}
+		return (utilisateur != null) && (mdp.equals(utilisateur.getMdp()));
 	}
+	
+	public boolean verif_horaire_groupe(Groupe groupe, LocalDateTime nouvDebut, LocalDateTime nouvFin, Edt edtAssocie) {
+		
+
+        String requete = "SELECT * FROM Cours c WHERE c.edt_associe = :edtAssocie AND c.groupes = :groupe AND (c.debut < :nouvFin AND :nouvDebut < c.fin)";
+        TypedQuery<Cours> query = em.createQuery(requete, Cours.class);
+        query.setParameter("nouvDebut", nouvDebut);
+        query.setParameter("nouvFin", nouvFin);
+        query.setParameter("edtAssocie", edtAssocie);
+        query.setParameter("groupe", groupe);
+        query.setMaxResults(1);
+
+        Collection<Cours> cours_trouves = query.getResultList();
+		
+		return cours_trouves.isEmpty();
+	}
+	
+	public boolean verif_horaire_prof(LinkUtilEDT prof, LocalDateTime nouvDebut, LocalDateTime nouvFin, Edt edtAssocie) {
+
+        String requete = "SELECT * FROM Cours c WHERE c.edt_associe = :edtAssocie AND c.prof = :prof AND (c.debut < :nouvFin AND :nouvDebut < c.fin)";
+        TypedQuery<Cours> query = em.createQuery(requete, Cours.class);
+        query.setParameter("nouvDebut", nouvDebut);
+        query.setParameter("nouvFin", nouvFin);
+        query.setParameter("edtAssocie", edtAssocie);
+        query.setParameter("prof", prof);
+        query.setMaxResults(1);
+
+        Collection<Cours> cours_trouves = query.getResultList();
+		
+		return cours_trouves.isEmpty();
+	}
+	
+	public boolean verif_horaire_salle(Salle salle, LocalDateTime nouvDebut, LocalDateTime nouvFin, Edt edtAssocie) {
+		
+
+        String requete = "SELECT * FROM Cours c WHERE c.edt_associe = :edtAssocie AND c.salle = :salle AND (c.debut < :nouvFin AND :nouvDebut < c.fin)";
+        TypedQuery<Cours> query = em.createQuery(requete, Cours.class);
+        query.setParameter("nouvDebut", nouvDebut);
+        query.setParameter("nouvFin", nouvFin);
+        query.setParameter("edtAssocie", edtAssocie);
+        query.setParameter("salle", salle);
+        query.setMaxResults(1);
+
+        // Execute the query and get the result list
+        Collection<Cours> cours_trouves = query.getResultList();
+		
+		return cours_trouves.isEmpty();
+	}
+	
+	public String verif_cours(String heureDebut_string, String minuteDebut_string, String heureFin_string, String minuteFin_string, 
+            String jour_string, String mois_string, String annee_string, String type_string, String matiere_string, 
+            String salle_string, String professeur_string, String groupe_string, String infosupp_string, String edt) {
+		
+		int heuredebut =  Integer.parseInt(heureDebut_string) ;
+		int minutedebut = Integer.parseInt(minuteDebut_string);
+		int heurefin = Integer.parseInt(heureFin_string);
+		int minutefin = Integer.parseInt(minuteFin_string);
+		int jours = Integer.parseInt(jour_string);
+		int mois = Integer.parseInt(mois_string);
+		int annee = Integer.parseInt(annee_string);
+		LocalDateTime debut = LocalDateTime.of(annee, mois, jours, heuredebut, minutedebut, 0);
+		LocalDateTime fin = LocalDateTime.of(annee, mois, jours, heurefin, minutefin, 0);
+		String[] groupes = groupe_string.split(",");
+		String[] salles = salle_string.split(",");
+		String[] profs = professeur_string.split(",");
+		String[] codes = edt.split(",");
+    	Edt edt_associe = em.find(Edt.class, codes[0]);
+		
+		
+		Collection<Groupe> list_groupe = new ArrayList<Groupe>();
+		for(String g_string : groupes) {
+			Groupe g = em.find(Groupe.class, g_string);
+			if (g != null) {
+				if (!verif_horaire_groupe(g, debut, fin, edt_associe)) {
+					return ("Groupe indisponible: "+g.getNom());
+				}
+			}else{
+				return ("Groupe introuvable: "+g.getNom());
+			}
+		}
+		
+		Collection<LinkUtilEDT> list_profs = new ArrayList<LinkUtilEDT>();
+		for(String prof_string : profs) {
+			LinkUtilEDT p = em.find(LinkUtilEDT.class, prof_string);
+			if (p != null) {
+				if (!verif_horaire_prof(p, debut, fin, edt_associe)) {
+					return ("Professeur(e) indisponible: "+p.getNom());
+				}
+			}else{
+				return ("Professeur(e) introuvable: "+p.getNom());
+			}
+		}
+		
+		Collection<Salle> list_salles = new ArrayList<Salle>();
+		for(String s_string : salles) {
+			Salle s = em.find(Salle.class, s_string);
+			if (s != null) {
+				if (!verif_horaire_salle(s, debut, fin, edt_associe)) {
+					return ("Salle indisponible: "+s.getNom());
+				}
+			}else{
+				return ("Salle introuvable: "+s.getNom());
+			}
+		}
+		
+		Matiere matiere = em.find(Matiere.class,matiere_string);
+		if (matiere == null) {
+			return ("Matière introuvable: "+matiere.getNom());
+		}
+		Type type = em.find(Type.class, type_string);
+		if (type == null) {
+			return ("Type introuvable: "+type.getNom());
+		}
+		
+		
+		return null;
+	}
+	
+	
+	
 	
 	public void ajout_utilisateur(String nom, String prenom, String mdp, String mail) {
 		Utilisateur nouveau = new Utilisateur();
@@ -123,9 +237,11 @@ public class Facade {
 		em.persist(nouveau);
 	}
 	
+	
+	
 	public void ajout_cours(String heureDebut_string, String minuteDebut_string, String heureFin_string, String minuteFin_string, 
             String jour_string, String mois_string, String annee_string, String type_string, String matiere_string, 
-            String salle_string, String professeur_string, String groupe_string, String infosupp_string) {
+            String salle_string, String professeur_string, String groupe_string, String infosupp_string, String edt) {
 		int heuredebut =  Integer.parseInt(heureDebut_string) ;
 		int minutedebut = Integer.parseInt(minuteDebut_string);
 		int heurefin = Integer.parseInt(heureFin_string);
@@ -142,36 +258,29 @@ public class Facade {
 		
 		Collection<Groupe> list_groupe = new ArrayList<Groupe>();
 		for(String g_string : groupes) {
-			try {
 			Groupe g = em.find(Groupe.class, g_string);
 			list_groupe.add(g);
-			} catch(Exception e) {
-				System.out.println("Aucun nom ayant ce groupe n'existe");
-			}
 		}
 		
 		Collection<LinkUtilEDT> list_profs = new ArrayList<LinkUtilEDT>();
 		for(String prof_string : profs) {
-			try {
 			LinkUtilEDT p = em.find(LinkUtilEDT.class, prof_string);
 			list_profs.add(p);
-			} catch(Exception e) {
-				System.out.println("Aucun prof ayant ce nom n'existe");
-			}
 		}
 		
 		Collection<Salle> list_salles = new ArrayList<Salle>();
 		for(String s_string : salles) {
-			try {
 			Salle s = em.find(Salle.class, s_string);
 			list_salles.add(s);
-			} catch(Exception e) {
-				System.out.println("Aucune salle ayant ce nom n'existe");
-			}
 		}
 		
 		Matiere matiere = em.find(Matiere.class,matiere_string);
 		Type type = em.find(Type.class, type_string);
+		
+		String[] codes = edt.split(",");
+    	Edt edt_associe = em.find(Edt.class, codes[0]);
+    	
+    	
 		Cours cours = new Cours();
         cours.setDebut(debut);
         cours.setFin(fin);
@@ -180,31 +289,90 @@ public class Facade {
         cours.setMatiere(matiere);
         cours.setType(type);
         cours.setSalle(list_salles);
+        cours.setEdt_associe(edt_associe);
 
         em.persist(cours);
 	}
         
-    public void ajout_etudiant(String numero,String prenom,String nom) {
+    public void ajout_etudiant(String numero,String prenom,String nom, String edt) {
     	//on crée l'étudiant
-    	Utilisateur etudiant = new Utilisateur();
+    	LinkUtilEDT etudiant = new LinkUtilEDT();
+    	etudiant.setNumero(numero);
     	etudiant.setPrenom(prenom);
     	etudiant.setNom(nom);
-    
+    	etudiant.setIsProf(false);
+    	
+    	String[] codes = edt.split(",");
+    	Edt edt_associe = em.find(Edt.class, codes[0]);
+    	etudiant.setEdt(edt_associe);
+    	
+    	em.persist(etudiant);
     
     }
     
-    public void ajout_prof(String numero,String prenom,String nom) {
-    	//on crée l'étudiant
-    	Utilisateur prof = new Utilisateur();
+    public void ajout_prof(String numero,String prenom,String nom, String edt) {
+    	//on crée le prof
+    	LinkUtilEDT prof = new LinkUtilEDT();
+    	prof.setNumero(numero);
     	prof.setPrenom(prenom);
     	prof.setNom(nom);
-    
+    	prof.setIsProf(true);
+    	
+    	String[] codes = edt.split(",");
+    	Edt edt_associe = em.find(Edt.class, codes[0]);
+    	prof.setEdt(edt_associe);
+    	
+    	em.persist(prof);
     
     }
     
-    public void creer_groupe(String nom, Part liste_etudiant_csv) {
+    public void ajout_matiere(String nom, String edt) {
+    	//on crée le prof
+    	Matiere matiere = new Matiere();
+    	matiere.setNom(nom);
+    	
+    	String[] codes = edt.split(",");
+    	Edt edt_associe = em.find(Edt.class, codes[0]);
+    	matiere.setEdt_associe(edt_associe);
+    	
+    	em.persist(matiere);
+    
+    }
+    
+    public void ajout_type(String nom, String edt) {
+    	//on crée le prof
+    	Matiere matiere = new Matiere();
+    	matiere.setNom(nom);
+    	
+    	String[] codes = edt.split(",");
+    	Edt edt_associe = em.find(Edt.class, codes[0]);
+    	matiere.setEdt_associe(edt_associe);
+    	
+    	em.persist(matiere);
+    
+    }
+    
+    public void ajout_salle(String nom, String edt) {
+    	//on crée le prof
+    	Salle salle = new Salle();
+    	salle.setNom(nom);
+    	
+    	String[] codes = edt.split(",");
+    	Edt edt_associe = em.find(Edt.class, codes[0]);
+    	salle.setEdt_associe(edt_associe);
+    	
+    	em.persist(salle);
+    
+    }
+    
+    public void creer_groupe(String nom, Part liste_etudiant_csv, String edt) {
     	Groupe groupe = new Groupe();
     	groupe.setNom(nom);
+    	
+    	String[] codes = edt.split(",");
+    	Edt edt_associe = em.find(Edt.class, codes[0]);
+    	groupe.setEdt_associe(edt_associe);
+    	
     	Collection<LinkUtilEDT> liste_eleves = new ArrayList<LinkUtilEDT>();
     	
     	BufferedReader reader;

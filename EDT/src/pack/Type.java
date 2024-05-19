@@ -13,6 +13,9 @@ public class Type {
 	@OneToMany(mappedBy ="type", fetch=FetchType.EAGER)
 	Collection<Cours> cours_associes;
 	
+	@ManyToOne
+	Edt edt_associe;
+	
 	public Type() {}
 
 	public String getNom() {
@@ -30,4 +33,14 @@ public class Type {
 	public void setCours_associes(Collection<Cours> cours_associes) {
 		this.cours_associes = cours_associes;
 	}
+
+	public Edt getEdt_associe() {
+		return edt_associe;
+	}
+
+	public void setEdt_associe(Edt edt_associe) {
+		this.edt_associe = edt_associe;
+	}
+	
+	
 }

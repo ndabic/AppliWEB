@@ -98,4 +98,14 @@ public class Cours {
 		this.salle = salle;
 	}
 
+	public Edt getEdt_associe() {
+		return edt_associe;
+	}
+
+	public void setEdt_associe(Edt edt_associe) {
+		this.edt_associe = edt_associe;
+	}
+	
+	
+
 }

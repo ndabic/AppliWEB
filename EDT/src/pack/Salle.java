@@ -15,7 +15,8 @@ public class Salle {
 	@ManyToMany(mappedBy ="salle", fetch=FetchType.EAGER)
 	Collection<Cours> cours_associes;
 	
-	
+	@ManyToOne
+	Edt edt_associe;
 	
 	public Salle() {}
 
@@ -34,6 +35,16 @@ public class Salle {
 	public void setCours_associes(Collection<Cours> cours_associes) {
 		this.cours_associes = cours_associes;
 	}
+	
+	public Edt getEdt_associe() {
+		return edt_associe;
+	}
+
+	public void setEdt_associe(Edt edt_associe) {
+		this.edt_associe = edt_associe;
+	}
+	
+	
 
 
 }
