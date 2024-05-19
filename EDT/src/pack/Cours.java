@@ -16,7 +16,7 @@ public class Cours {
 	@ManyToMany
 	Collection<Groupe> groupes;
 	
-	@ManyToOne
+	@ManyToMany
 	Collection<LinkUtilEDT> prof; // lie le prof grâce à son numéro
 	
 
@@ -26,7 +26,7 @@ public class Cours {
 	@ManyToOne
 	Type type;
 	
-	@ManyToOne
+	@ManyToMany
 	Collection<Salle> salle;
 	
 	@ManyToOne

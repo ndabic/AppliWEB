@@ -19,7 +19,7 @@ public class LinkUtilEDT {
 	@ManyToOne
 	Edt edt;
 	
-	@OneToMany(mappedBy = "prof", fetch=FetchType.EAGER)
+	@ManyToMany(mappedBy = "prof", fetch=FetchType.EAGER)
 	Collection<Cours> enseigne;
 	
 	@ManyToMany
