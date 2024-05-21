@@ -45,21 +45,36 @@
 				String couleur = c.getMatiere().getCouleur();
 				String matiere = c.getMatiere().getNom();
 				String type = c.getType().getNom();
-				String salle = c.getSalle().getNom();
+				
+
+				String salles = "";
+				Collection<Salle> sallesCours = c.getSalle();
+				for (Salle salle : sallesCours){
+					salles.concat(salle.getNom()+",");
+				}
+				salles.substring(0, salles.length()-1);
+				
 				String groupes = "";
 				Collection<Groupe> groupesCours = c.getGroupes();
 				for (Groupe groupe : groupesCours){
 					groupes.concat(groupe.getNom()+",");
 				}
 				groupes.substring(0, groupes.length()-1);
-				String prof = c.getProf().getUtilisateur().getPrenom()+" "+c.getProf().getUtilisateur().getNom();
+				
+				String profs = "";
+				Collection<LinkUtilEDT> profsCours = c.getProf();
+				for (LinkUtilEDT prof : profsCours){
+					profs.concat(prof.getPrenom()+" "+prof.getNom()+",");
+				}
+				profs.substring(0, profs.length()-1);
+				
 				int heureDebut = c.getDebut().getHour();
 				int minuteDebut = c.getDebut().getMinute();
 				int heureFin = c.getFin().getHour();
 				int minuteFin = c.getFin().getMinute();
 				String horaire = heureDebut+","+minuteDebut+","+heureFin+","+minuteFin;
 				int jour = c.getDebut().getDayOfWeek().getValue()-1;
-				out.println("<div class='testDiv' value='couleur:"+couleur+"; matiere:"+matiere+"; type:"+type+"; salle:"+salle+"; groupes:"+groupes+" prof:"+prof+"; horaire:"+horaire+"; jour:"+jour+"'></div>");
+				out.println("<div class='testDiv' value='couleur:"+couleur+"; matiere:"+matiere+"; type:"+type+"; salle:"+salles+"; groupes:"+groupes+" prof:"+profs+"; horaire:"+horaire+"; jour:"+jour+"'></div>");
 			}
 		}
 		%>
