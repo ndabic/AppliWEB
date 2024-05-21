@@ -8,6 +8,7 @@ import java.util.Collection;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -52,6 +53,17 @@ public class Serv extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		//printRequest(request);
+		String cookieUser = null;
+        
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if ("cookie-edt".equals(cookie.getName())) {
+                	cookieUser = cookie.getValue();
+                    break;
+                }
+            }
+        }
 		String op = request.getParameter("op");
 		switch (op) {
 		case "inscription":
@@ -72,7 +84,10 @@ public class Serv extends HttpServlet {
 			String mail_conn = request.getParameter("mail");
 			String mdp_conn = request.getParameter("mdp");
 			if (facade.verif_connexion(mail_conn, mdp_conn)) {
-				response.getWriter().append("Found you !").append(request.getContextPath());
+				//response.getWriter().append("Found you !").append(request.getContextPath());
+				Cookie cookie = new Cookie("cookie-edt", String.valueOf(mail_conn)); // value equals the mail
+                cookie.setMaxAge(60 * 60); // 1 hour
+                response.addCookie(cookie);
 				request.getRequestDispatcher("Serv?op=afficherEDT").forward(request, response);
 			}else {
 				request.getRequestDispatcher("connexion.html").forward(request, response);
@@ -80,19 +95,19 @@ public class Serv extends HttpServlet {
 			break;
 			
 		case "afficherEDT":
-			String mail_EDT = request.getParameter("mail");
-			Collection<Cours> lCours = facade.getCoursSemaine(mail_EDT);
+			//String mail_EDT = request.getParameter("mail");
+			Collection<Cours> lCours = facade.getCoursSemaine(cookieUser);
 			request.setAttribute("lCours", lCours);
 			request.getRequestDispatcher("schedule.jsp").forward(request, response);
 			break;
 			
-		case "reponseTypeAJAX":
+		/*case "reponseTypeAJAX":
 			response.setContentType("text/html");
 	        response.setCharacterEncoding("UTF-8");
 	        PrintWriter out = response.getWriter();
 	        out.print("hello this is another test.");
 	        out.flush();
-	        break;
+	        break;*/
 			
 	
 		case "addCours":
@@ -119,14 +134,13 @@ public class Serv extends HttpServlet {
 	        	facade.ajout_cours(heureDebut, minuteDebut, heureFin, minuteFin, 
                     jour, mois, annee, typeCours, matiereCours, 
                     sallesCours, profsCours, groupesCours, infosSuppCours, edtCours);
-	        }else {
-	        	response.setContentType("text/html");
-		        response.setCharacterEncoding("UTF-8");
-		        PrintWriter outCours = response.getWriter();
-		        outCours.print(res);
-		        outCours.flush();
+	        	res = "displayOK";
 	        }
-			
+	        response.setContentType("text/html");
+	        response.setCharacterEncoding("UTF-8");
+	        PrintWriter outCours = response.getWriter();
+	        outCours.print(res);
+	        outCours.flush();
 			break;
 		
 		case "addEtudiant":
@@ -152,11 +166,74 @@ public class Serv extends HttpServlet {
             facade.creer_groupe(nomGroupe,fileGroupe, edtGroupe);
             break;
             
+        case "getGroupesEDT":
+			String edt_groupes = request.getParameter("edt");
+			String groupes = facade.getGroupesEDT(edt_groupes);
+			
+			response.setContentType("text/html");
+	        response.setCharacterEncoding("UTF-8");
+	        PrintWriter outGroupes = response.getWriter();
+	        outGroupes.print(groupes);
+	        outGroupes.flush();
+	        break;    
+	    
+        case "getTypesEDT":
+			String edt_types = request.getParameter("edt");
+			String types = facade.getTypesEDT(edt_types);
+			
+			response.setContentType("text/html");
+	        response.setCharacterEncoding("UTF-8");
+	        PrintWriter outTypes = response.getWriter();
+	        outTypes.print(types);
+	        outTypes.flush();
+	        break;
+	        
+        case "getMatieresEDT":
+			String edt_matieres = request.getParameter("edt");
+			String matieres = facade.getMatieresEDT(edt_matieres);
+			
+			response.setContentType("text/html");
+	        response.setCharacterEncoding("UTF-8");
+	        PrintWriter outMatieres = response.getWriter();
+	        outMatieres.print(matieres);
+	        outMatieres.flush();
+	        break;
+	        
+        case "getProfsEDT":
+			String edt_profs = request.getParameter("edt");
+			String profs = facade.getProfsEDT(edt_profs);
+			
+			response.setContentType("text/html");
+	        response.setCharacterEncoding("UTF-8");
+	        PrintWriter outProfs = response.getWriter();
+	        outProfs.print(profs);
+	        outProfs.flush();
+	        break;
+	    
+        case "getSallesEDT":
+			String edt_salles = request.getParameter("edt");
+			String salles = facade.getSallesEDT(edt_salles);
+			
+			response.setContentType("text/html");
+	        response.setCharacterEncoding("UTF-8");
+	        PrintWriter outSalles = response.getWriter();
+	        outSalles.print(salles);
+	        outSalles.flush();
+	        break;
+	        
+        case "adminEDT":
+        	String edtToAdmin = request.getParameter("edt");
+        	request.setAttribute("edtCodes", edtToAdmin);
+			request.getRequestDispatcher("schedule-admin.jsp").forward(request, response);
+			break;
+        	
+            
 		default:
 			response.getWriter().append("Served at: ").append(request.getContextPath());
 			break;
 		}
-	        
+		
+		
 	}
 
 	/**

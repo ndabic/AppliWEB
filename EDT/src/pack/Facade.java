@@ -391,5 +391,76 @@ public class Facade {
 			e.printStackTrace();
 		}
     }
+    
+    public String getGroupesEDT(String edt) {
+    	String[] codes = edt.split(",");
+    	Edt edt_associe = em.find(Edt.class, codes[0]);
+    	Collection<Groupe> groupes = edt_associe.getGroupes();
+    	String res = "";
+    	for(Groupe g : groupes) {
+    		res += ","+g;
+    	}
+    	if (res != "") {
+    		res = res.substring(1);
+    	}
+    	return res;
+    }
+    
+    public String getSallesEDT(String edt) {
+    	String[] codes = edt.split(",");
+    	Edt edt_associe = em.find(Edt.class, codes[0]);
+    	Collection<Salle> salles = edt_associe.getSalles();
+    	String res = "";
+    	for(Salle s : salles) {
+    		res += ","+s;
+    	}
+    	if (res != "") {
+    		res = res.substring(1);
+    	}
+    	return res;
+    }
+    
+    public String getProfsEDT(String edt) {
+    	String[] codes = edt.split(",");
+    	Edt edt_associe = em.find(Edt.class, codes[0]);
+    	Collection<LinkUtilEDT> all_links = edt_associe.getLiens_utilisateur_EDT();
+    	String res = "";
+    	for(LinkUtilEDT l : all_links) {
+    		if (l.getIsProf()) // keep only links that are teachers
+    			res += ","+l;
+    	}
+    	if (res != "") {
+    		res = res.substring(1);
+    	}
+    	return res;
+    }
+    
+    public String getMatieresEDT(String edt) {
+    	String[] codes = edt.split(",");
+    	Edt edt_associe = em.find(Edt.class, codes[0]);
+    	Collection<Matiere> matieres = edt_associe.getMatieres();
+    	String res = "";
+    	for(Matiere m : matieres) {
+    		res += ","+m;
+    	}
+    	if (res != "") {
+    		res = res.substring(1);
+    	}
+    	return res;
+    }
+    
+    public String getTypesEDT(String edt) {
+    	String[] codes = edt.split(",");
+    	Edt edt_associe = em.find(Edt.class, codes[0]);
+    	Collection<Type> types = edt_associe.getTypes();
+    	String res = "";
+    	for(Type t : types) {
+    		res += ","+t;
+    	}
+    	if (res != "") {
+    		res = res.substring(1);
+    	}
+    	return res;
+    }
 }
     
