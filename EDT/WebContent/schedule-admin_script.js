@@ -2,6 +2,7 @@ const delay = ms => new Promise(res => setTimeout(res, ms));
 let waitingTime = 30;
 
 document.addEventListener("DOMContentLoaded", function() {
+	checkCookieAjax();
     const days = ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi"];
 
     const scheduleTable = document.getElementById("schedule");
@@ -201,16 +202,26 @@ function place_cours(couleur, matiere, type, salle, groupes, prof, horaire, jour
     
 }
 
+function contentAdded() {
+    var notif = document.querySelector(".notif");
+    notif.innerHTML = "Ajouté";
+    notif.classList.add("notif-show");
+
+    setTimeout(() => {
+        notif.classList.remove("notif-show");
+        notif.innerHTML = "";
+    }, 1000);
+ }
+
 function submitForm(form) {
     form.submit();
 }
 
+function checkCookieAjax(){	
+    var formData = new FormData(); // Serialize form data
 
-function submitFormAjax(formID) {        
-    var form = document.getElementById(formID);
-
-    var formData = new FormData(form); // Serialize form data
-
+    formData.append("op", "checkCookie");
+    
     var xhr = new XMLHttpRequest();
     xhr.open("POST", "Serv", true);
     xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8"); // Set content type
@@ -218,7 +229,25 @@ function submitFormAjax(formID) {
         if (xhr.readyState === XMLHttpRequest.DONE) {
             if (xhr.status === 200) {
                 // Request succeeded
-                document.querySelector("h1").innerHTML = xhr.responseText;
+            	if (res.startsWith("success")) {
+            		var ress = res.split(":");
+            		var profile = document.querySelector(".user-profile");
+            		profile.innerHTML = ress[1];
+            	    profile.classList.remove("hide");
+            	    document.querySelector(".user-container").classList.add("connected");
+
+            	    document.querySelectorAll(".sign-button").forEach(function(button) {
+            	        button.classList.add("hide");
+            	    });
+            	} else {
+            	    document.querySelector(".user-profile").classList.add("hide");
+            	    document.querySelector(".user-container").classList.remove("connected");
+
+            	    document.querySelectorAll(".sign-button").forEach(function(button) {
+            	        button.classList.remove("hide");
+            	    });
+            	}
+
             } else {
                 // Request failed
                 console.error("Request failed with status:", xhr.status);
@@ -226,6 +255,71 @@ function submitFormAjax(formID) {
         }
     };
     xhr.send(new URLSearchParams(formData)); // Send form data
+	
+}
+
+function buildDropDownAjax(containerID, descAToAdd, GETInfos) {
+    // Create a new FormData object
+    var formData = new FormData();
+	formData.append("op", GETInfos);
+    // Append key-value pairs to the FormData object
+    formData.append("edt", document.getElementById("edtCodes").innerHTML);
+
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "Serv", true);
+    // You do not need to set Content-Type when sending FormData
+    // xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
+
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState === XMLHttpRequest.DONE) {
+            if (xhr.status === 200) {
+                // Request succeeded
+            	var res = xhr.responseText;
+            	var elems = res.split(",");
+                var container = document.getElementById(containerID);
+                for (var i = 0; i < elems.length; i++) {
+                	if (!container.innerHTML.includes(descAToAdd + elems[i] + "</a>")) {
+                	    container.innerHTML += descAToAdd + elems[i] + "</a>";
+                	}
+					
+				}
+            } else {
+                // Request failed
+                console.error("Request failed with status:", xhr.status);
+            }
+        }
+    };
+    xhr.send(formData); // Send the FormData object
+}
+
+
+
+function submitFormAjax(formID) {
+	if (validateForm(formID)){
+		var form = document.getElementById(formID);
+	
+	    var formData = new FormData(form); // Serialize form data
+	
+	    var xhr = new XMLHttpRequest();
+	    xhr.open("POST", "Serv", true);
+	    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8"); // Set content type
+	    xhr.onreadystatechange = function() {
+	        if (xhr.readyState === XMLHttpRequest.DONE) {
+	            if (xhr.status === 200) {
+	                // Request succeeded
+	                document.querySelector("h1").innerHTML = xhr.responseText;
+	                popUpContainer.classList.toggle("show-flex");
+	                popUp.innerHTML = "";
+	                contentAdded();
+	            } else {
+	                // Request failed
+	                console.error("Request failed with status:", xhr.status);
+	            }
+	        }
+	    };
+	    xhr.send(new URLSearchParams(formData)); // Send form data
+	}
+    
 }
 
 
@@ -291,13 +385,13 @@ window.onclick = function(event) {
 function validateForm(popupInfo) {
     switch (popupInfo) {
 
-        case 'Cours':
-                var csvFile = document.forms["addCoursForm"]["file-cours"].value;
-                var type = document.forms["addCoursForm"]["type-cours"].value;
-                var matiere = document.forms["addCoursForm"]["matiere-cours"].value;
-                var salles = document.forms["addCoursForm"]["salles-cours"].value;
-                var profs = document.forms["addCoursForm"]["profs-cours"].value;
-                var groupes = document.forms["addCoursForm"]["groupes-cours"].value;
+        case 'addCours':
+                var csvFile = document.forms["addCours"]["file-cours"].value;
+                var type = document.forms["addCours"]["type-cours"].value;
+                var matiere = document.forms["addCours"]["matiere-cours"].value;
+                var salles = document.forms["addCours"]["salles-cours"].value;
+                var profs = document.forms["addCours"]["profs-cours"].value;
+                var groupes = document.forms["addCours"]["groupes-cours"].value;
 
                 if (!(csvFile == "" ^ (type == "" || matiere == "" || salles == "" || profs == "" || groupes == ""))) {
                     var errorMessage = document.querySelector(".error-message");
@@ -307,9 +401,9 @@ function validateForm(popupInfo) {
                 }
             break;
 
-        case 'Étudiant':
-                var csvFile = document.forms["addLinkForm"]["file-link"].value;
-                var number = document.forms["addLinkForm"]["num-link"].value;
+        case 'addEtudiant':
+                var csvFile = document.forms["addEtudiant"]["file-link"].value;
+                var number = document.forms["addEtudiant"]["num-link"].value;
 
                 if (csvFile == "" || number == "") {
                     var errorMessage = document.querySelector(".error-message");
@@ -319,11 +413,11 @@ function validateForm(popupInfo) {
                 }
             break;
 
-        case 'Professeur':
-            var csvFile = document.forms["addLinkForm"]["file-link"].value;
-                var number = document.forms["addLinkForm"]["num-link"].value;
-                var name = document.forms["addLinkForm"]["nom-link"].value;
-                var firstname = document.forms["addLinkForm"]["prenom-link"].value;
+        case 'addProfesseur':
+            var csvFile = document.forms["addProfesseur"]["file-link"].value;
+                var number = document.forms["addProfesseur"]["num-link"].value;
+                var name = document.forms["addProfesseur"]["nom-link"].value;
+                var firstname = document.forms["addProfesseur"]["prenom-link"].value;
 
                 if (csvFile == "" || number == "" || name == "" || firstname == "") {
                     var errorMessage = document.querySelector(".error-message");
@@ -333,9 +427,9 @@ function validateForm(popupInfo) {
                 }
             break;
 
-        case 'Groupe':
-                var csvFile = document.forms["addGroupeForm"]["file-groupe"].value;
-                var name = document.forms["addGroupeForm"]["nom-groupe"].value;
+        case 'addGroupe':
+                var csvFile = document.forms["addGroupe"]["file-groupe"].value;
+                var name = document.forms["addGroupe"]["nom-groupe"].value;
 
                 if (csvFile == "" || name == "") {
                     var errorMessage = document.querySelector(".error-message");
@@ -345,9 +439,9 @@ function validateForm(popupInfo) {
                 }
             break;
 
-        case 'Salle':
-                var csvFile = document.forms["addSalleForm"]["file-salle"].value;
-                var name = document.forms["addSalleForm"]["nom-salle"].value;
+        case 'addSalle':
+                var csvFile = document.forms["addSalle"]["file-salle"].value;
+                var name = document.forms["addSalle"]["nom-salle"].value;
 
                 if (!(csvFile == "" ^ name == "")) {
                     var errorMessage = document.querySelector(".error-message");
@@ -359,9 +453,9 @@ function validateForm(popupInfo) {
 
         
 
-        case 'Matière':
-                var csvFile = document.forms["addMatiereForm"]["file-matiere"].value;
-                var name = document.forms["addMatiereForm"]["nom-matiere"].value;
+        case 'addMatiere':
+                var csvFile = document.forms["addMatiere"]["file-matiere"].value;
+                var name = document.forms["addMatiere"]["nom-matiere"].value;
 
                 if (!(csvFile == "" ^ name == "")) {
                     var errorMessage = document.querySelector(".error-message");
@@ -371,9 +465,9 @@ function validateForm(popupInfo) {
                 }
             break;
 
-        case 'Type':
-                var csvFile = document.forms["addTypeForm"]["file-type"].value;
-                var name = document.forms["addTypeForm"]["nom-type"].value;
+        case 'addType':
+                var csvFile = document.forms["addType"]["file-type"].value;
+                var name = document.forms["addType"]["nom-type"].value;
 
                 if (!(csvFile == "" ^ name == "")) {
                     var errorMessage = document.querySelector(".error-message");
@@ -483,7 +577,7 @@ function toggleShow(self) {
                         <h2 class="title-${popupInfo}">${popupInfo}</h2>
                         <button onclick="toggleShow(this)" class="button-exit">X</button>
                     </div>
-                    <form id="addCoursForm" name="addCoursForm" method="post" action="Serv" onsubmit="return validateForm('${popupInfo}')">
+                    <form id="addCours" name="addCours" method="post" action="Serv">
                         <table class="popup-table">
                         
                             <tr>
@@ -545,14 +639,14 @@ function toggleShow(self) {
                             <tr>
                                 <td><div class="dropdown">
                                     <button type="button" onclick="toggleDropdown('dropdown-div1')" class="add-button choice-button">Type</button>
-                                    <div id="dropdown-div1" class="choice-content">
-                                    <a onclick="toggleClickedOne(this, 'type-cours', 0)" class="choice-element single-choice0">Cours</a>
+                                    <div id="dropdown-div1" class="choice-content">`+
+                                    /*<a onclick="toggleClickedOne(this, 'type-cours', 0)" class="choice-element single-choice0">Cours</a>
                                     <a onclick="toggleClickedOne(this, 'type-cours', 0)" class="choice-element single-choice0">TD</a>
                                     <a onclick="toggleClickedOne(this, 'type-cours', 0)" class="choice-element single-choice0">TP</a>
                                     <a onclick="toggleClickedOne(this, 'type-cours', 0)" class="choice-element single-choice0">Cours-TD</a>
-                                    <a onclick="toggleClickedOne(this, 'type-cours', 0)" class="choice-element single-choice0">Cours-TP</a>
+                                    <a onclick="toggleClickedOne(this, 'type-cours', 0)" class="choice-element single-choice0">Cours-TP</a>*/
                                 
-                                    </div>
+                                    `</div>
                                 </div></td>
                                 <td><input type="text" id="type-cours" name="type-cours"><br></td>
                             </tr>
@@ -560,14 +654,14 @@ function toggleShow(self) {
                             <tr>
                                 <td><div class="dropdown">
                                     <button type="button" onclick="toggleDropdown('dropdown-div2')" class="add-button choice-button">Matière</button>
-                                    <div id="dropdown-div2" class="choice-content">
-                                    <a onclick="toggleClickedOne(this, 'matiere-cours', 1)" class="choice-element single-choice1">Rendu</a>
+                                    <div id="dropdown-div2" class="choice-content">`+
+                                    /*<a onclick="toggleClickedOne(this, 'matiere-cours', 1)" class="choice-element single-choice1">Rendu</a>
                                     <a onclick="toggleClickedOne(this, 'matiere-cours', 1)" class="choice-element single-choice1">TAV</a>
                                     <a onclick="toggleClickedOne(this, 'matiere-cours', 1)" class="choice-element single-choice1">Web</a>
                                     <a onclick="toggleClickedOne(this, 'matiere-cours', 1)" class="choice-element single-choice1">Programmation Mobile</a>
-                                    <a onclick="toggleClickedOne(this, 'matiere-cours', 1)" class="choice-element single-choice1">Base de données</a>
+                                    <a onclick="toggleClickedOne(this, 'matiere-cours', 1)" class="choice-element single-choice1">Base de données</a>*/
                                 
-                                    </div>
+                                    `</div>
                                 </div></td>
                                 <td><input type="text" id="matiere-cours" name="matiere-cours"><br></td>
                             </tr>
@@ -575,14 +669,14 @@ function toggleShow(self) {
                             <tr>
                                 <td><div class="dropdown">
                                     <button type="button" onclick="toggleDropdown('dropdown-div3')" class="add-button choice-button">Salles</button>
-                                    <div id="dropdown-div3" class="choice-content">
-                                    <a onclick="toggleClicked(this, 'salles-cours')" class="choice-element">B00</a>
+                                    <div id="dropdown-div3" class="choice-content">`+
+                                    /*<a onclick="toggleClicked(this, 'salles-cours')" class="choice-element">B00</a>
                                     <a onclick="toggleClicked(this, 'salles-cours')" class="choice-element">A202</a>
                                     <a onclick="toggleClicked(this, 'salles-cours')" class="choice-element">C301</a>
                                     <a onclick="toggleClicked(this, 'salles-cours')" class="choice-element">A101</a>
-                                    <a onclick="toggleClicked(this, 'salles-cours')" class="choice-element">B306</a>
+                                    <a onclick="toggleClicked(this, 'salles-cours')" class="choice-element">B306</a>*/
                                   
-                                    </div>
+                                    `</div>
                                 </div></td>
                                 <td><input type="text" id="salles-cours" name="salles-cours"><br></td>
                             </tr>
@@ -590,14 +684,14 @@ function toggleShow(self) {
                             <tr>
                                 <td><div class="dropdown">
                                     <button type="button" onclick="toggleDropdown('dropdown-div4')" class="add-button choice-button">Professeurs</button>
-                                    <div id="dropdown-div4" class="choice-content">
-                                    <a onclick="toggleClicked(this, 'profs-cours')" class="choice-element">Daniel HAGIMONT</a>
+                                    <div id="dropdown-div4" class="choice-content">`+
+                                    /*<a onclick="toggleClicked(this, 'profs-cours')" class="choice-element">Daniel HAGIMONT</a>
                                     <a onclick="toggleClicked(this, 'profs-cours')" class="choice-element">Pierre ALIBERT</a>
                                     <a onclick="toggleClicked(this, 'profs-cours')" class="choice-element">Nikola DABIC</a>
                                     <a onclick="toggleClicked(this, 'profs-cours')" class="choice-element">Arthur CLODION</a>
-                                    <a onclick="toggleClicked(this, 'profs-cours')" class="choice-element">Géraldine Morin</a>
+                                    <a onclick="toggleClicked(this, 'profs-cours')" class="choice-element">Géraldine Morin</a>*/
                                   
-                                    </div>
+                                    `</div>
                                 </div></td>
                                 <td><input type="text" id="profs-cours" name="profs-cours"><br></td>
                             </tr>
@@ -605,14 +699,14 @@ function toggleShow(self) {
                             <tr>
                                 <td><div class="dropdown">
                                     <button type="button" onclick="toggleDropdown('dropdown-div5')" class="add-button choice-button">Groupes</button>
-                                    <div id="dropdown-div5" class="choice-content">
-                                    <a onclick="toggleClicked(this, 'groupes-cours')" class="choice-element">SN</a>
+                                    <div id="dropdown-div5" class="choice-content">`+
+                                    /*<a onclick="toggleClicked(this, 'groupes-cours')" class="choice-element">SN</a>
                                     <a onclick="toggleClicked(this, 'groupes-cours')" class="choice-element">3EA</a>
                                     <a onclick="toggleClicked(this, 'groupes-cours')" class="choice-element">MFEE</a>
                                     <a onclick="toggleClicked(this, 'groupes-cours')" class="choice-element">M1</a>
-                                    <a onclick="toggleClicked(this, 'groupes-cours')" class="choice-element">M2</a>
+                                    <a onclick="toggleClicked(this, 'groupes-cours')" class="choice-element">M2</a>*/
                                   
-                                    </div>
+                                    `</div>
                                 </div></td>
                                 <td><input type="text" id="groupes-cours" name="groupes-cours"><br></td>
                             </tr>
@@ -633,7 +727,7 @@ function toggleShow(self) {
                             </tr>
                         </table>
                         <div class="center-line">
-                            <button type="button" class="submit-button" onclick="submitFormAjax('addCoursForm')">Ajouter</button>
+                            <button type="button" class="submit-button" onclick="submitFormAjax('addCours')">Ajouter</button>
                         </div>
                         <input type="hidden" name="op" value="addCours">
                     </form>
@@ -641,7 +735,7 @@ function toggleShow(self) {
                 `;
 
             togglePopUp = true;
-            //submitFormAjax('addCoursForm');
+            //submitFormAjax('addCours');
                 
             var optionalInputs = document.querySelectorAll(".optional-input");
             optionalInputs.forEach(input => {
@@ -721,7 +815,7 @@ function toggleShow(self) {
                         <h2 class="title-${popupInfo}">${popupInfo}</h2>
                         <button onclick="toggleShow(this)" class="button-exit">X</button>
                     </div>
-                    <form id="addLinkForm" name="addLinkForm" method="post" action="Serv" onsubmit="return validateForm('${popupInfo}')">
+                    <form id="addEtudiant" name="addEtudiant" method="post" action="Serv">
                         <table class="popup-table">
                             <tr>
                                 <td><label for="num-link">Numéro:</label></td>
@@ -742,7 +836,7 @@ function toggleShow(self) {
                             </tr>
                         </table>
                         <div class="center-line">
-                            <button type="button" class="submit-button" onclick="submitFormAjax('addLinkForm')">Ajouter</button>
+                            <button type="button" class="submit-button" onclick="submitFormAjax('addEtudiant')">Ajouter</button>
                         </div>
                         <input type="hidden" name="op" value="addEtudiant">
                     </form>
@@ -779,7 +873,7 @@ function toggleShow(self) {
                             <h2 class="title-${popupInfo}">${popupInfo}</h2>
                             <button onclick="toggleShow(this)" class="button-exit">X</button>
                         </div>
-                        <form id="addLinkForm" name="addLinkForm" method="post" action="Serv" onsubmit="return validateForm('${popupInfo}')">
+                        <form id="addProfesseur" name="addProfesseur" method="post" action="Serv" onsubmit="return validateForm('${popupInfo}')">
                             <table class="popup-table">
                                 <tr>
                                     <td><label for="num-link">Numéro:</label></td>
@@ -801,7 +895,7 @@ function toggleShow(self) {
                                 </tr>
                             </table>
                             <div class="center-line">
-                            	<button type="button" class="submit-button" onclick="submitFormAjax('addLinkForm')">Ajouter</button>
+                            	<button type="button" class="submit-button" onclick="submitFormAjax('addProfesseur')">Ajouter</button>
                             </div>
                             <input type="hidden" name="op" value="addProfesseur">
                         </form>
@@ -818,7 +912,7 @@ function toggleShow(self) {
                         <h2 class="title-${popupInfo}">${popupInfo}</h2>
                         <button onclick="toggleShow(this)" class="button-exit">X</button>
                     </div>
-                    <form id="addGroupeForm" name="addGroupeForm" method="post" action="Serv" onsubmit="return validateForm('${popupInfo}')">
+                    <form id="addGroupe" name="addGroupe" method="post" action="Serv" onsubmit="return validateForm('${popupInfo}')">
                         <table class="popup-table">
                             <tr>
                                 <td><label for="nom-groupe">Nom:</label></td>
@@ -831,7 +925,7 @@ function toggleShow(self) {
                             </tr>
                         </table>
                         <div class="center-line">
-                            <button type="button" class="submit-button" onclick="submitFormAjax('addGroupeForm')">Ajouter</button>
+                            <button type="button" class="submit-button" onclick="submitFormAjax('addGroupe')">Ajouter</button>
                         </div>
                         <input type="hidden" name="op" value="addGroupe">
                     </form>
@@ -848,7 +942,7 @@ function toggleShow(self) {
                         <h2 class="title-${popupInfo}">${popupInfo}</h2>
                         <button onclick="toggleShow(this)" class="button-exit">X</button>
                     </div>
-                    <form id="addMatiereForm" name="addMatiereForm" method="post" action="Serv" onsubmit="return validateForm('${popupInfo}')">
+                    <form id="addMatiere" name="addMatiere" method="post" action="Serv" onsubmit="return validateForm('${popupInfo}')">
                         <table class="popup-table">
                             <tr>
                                 <td><label for="file-matiere0">Liste des matières:</label></td>
@@ -864,7 +958,7 @@ function toggleShow(self) {
                             </tr>
                         </table>
                         <div class="center-line">
-                            <button type="button" class="submit-button" onclick="submitFormAjax('addMatiereForm')">Ajouter</button>
+                            <button type="button" class="submit-button" onclick="submitFormAjax('addMatiere')">Ajouter</button>
                         </div>
                         <input type="hidden" name="op" value="addMatiere">
                     </form>
@@ -881,7 +975,7 @@ function toggleShow(self) {
                         <h2 class="title-${popupInfo}">${popupInfo}</h2>
                         <button onclick="toggleShow(this)" class="button-exit">X</button>
                     </div>
-                    <form id="addSalleForm" name="addSalleForm" method="post" action="Serv" onsubmit="return validateForm('${popupInfo}')">
+                    <form id="addSalle" name="addSalle" method="post" action="Serv" onsubmit="return validateForm('${popupInfo}')">
                         <table class="popup-table">
                             <tr>
                                 <td><label for="file-salle0">Liste des salles:</label></td>
@@ -897,7 +991,7 @@ function toggleShow(self) {
                             </tr>
                         </table>
                         <div class="center-line">
-                            <button type="button" class="submit-button" onclick="submitFormAjax('addSalleForm')">Ajouter</button>
+                            <button type="button" class="submit-button" onclick="submitFormAjax('addSalle')">Ajouter</button>
                         </div>
                         <input type="hidden" name="op" value="addSalle">
                     </form>
@@ -914,7 +1008,7 @@ function toggleShow(self) {
                         <h2 class="title-${popupInfo}">${popupInfo}</h2>
                         <button onclick="toggleShow(this)" class="button-exit">X</button>
                     </div>
-                    <form id="addTypeForm" name="addTypeForm" method="post" action="Serv" onsubmit="return validateForm('${popupInfo}')">
+                    <form id="addType" name="addType" method="post" action="Serv" onsubmit="return validateForm('${popupInfo}')">
                         <table class="popup-table">
                             <tr>
                                 <td><label for="file-type0">Liste des types:</label></td>
@@ -930,7 +1024,7 @@ function toggleShow(self) {
                             </tr>
                         </table>
                         <div class="center-line">
-                            <button type="button" class="submit-button" onclick="submitFormAjax('addTypeForm')">Ajouter</button>
+                            <button type="button" class="submit-button" onclick="submitFormAjax('addType')">Ajouter</button>
                         </div>
                         <input type="hidden" name="op" value="addType">
                     </form>
@@ -945,6 +1039,7 @@ function toggleShow(self) {
 
         case 'X':
             popUpContainer.classList.toggle("show-flex");
+            popUp.innerHTML = "";
             break;
 
 	}

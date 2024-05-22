@@ -18,13 +18,13 @@
 		
 		<div class="user-container">
 
-
+			<div class="user-profile " onclick="location.href='profile.html'"></div>
 		
-			<button class="sign-button button-color-1" onclick="location.href='connexion.html'">
+			<button class="sign-button button-color-1 hide" onclick="location.href='connexion.html'">
 				Connexion
 			</button>
 
-			<button class="sign-button button-color-2" onclick="location.href='inscription.html'">
+			<button class="sign-button button-color-2 hide" onclick="location.href='inscription.html'">
 				Inscription
 			</button>
 

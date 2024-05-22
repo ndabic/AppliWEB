@@ -1,3 +1,7 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ page import="pack.*"%>
+<%@ page import="java.util.*"%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -18,7 +22,7 @@
             <h2 class="edt-title">&#160;Informations Utilisateur&#160;</h2>
             <table>
                 <tr>
-                    <td><label for="user-name" class="label-edt" onclick="copyContent('Light')">&#160;Prénom:&#160;</label></td>
+                    <td><label for="user-name" class="label-edt" onclick="copyContent('Light')">&#160;PrÃ©nom:&#160;</label></td>
                     <td><input type="text" id="user-firstname" class="info-input" value=" Light"></input></td>
                 </tr>
                 <tr>
@@ -43,7 +47,6 @@
 
                 <tr><td><button class="save-user-pswrd">S</button></td></tr>
             </table>
-            
                    
         </div>
 
@@ -51,8 +54,8 @@
             <div class="edt-header">
                 <h2 class="edt-title">&#160;Gestionnaire d'emplois du temps&#160;</h2>
                 <div class="edt-buttons">
-                    <button class="button-add-edt" title="Créer un EDT">&#160;+&#160;</button>
-                    <button class="button-link-edt" title="Se lier à un EDT">&#160;-//-&#160;</button>
+                    <button class="button-add-edt" title="CrÃ©er un EDT">&#160;+&#160;</button>
+                    <button class="button-link-edt" title="Se lier Ã  un EDT">&#160;-//-&#160;</button>
                 </div>
             </div>
             <div class="notif hide"></div>
@@ -63,17 +66,17 @@
                         <div class="code-edt code-admin 0" onclick="copyContent('AXI567')">&#160;AXI567&#160;</div>
                         <div class="code-edt code-prof 0" onclick="copyContent('IUY543')">&#160;IUY543&#160;</div>
                         <div class="code-edt code-etu 0" onclick="copyContent('OIU987')">&#160;OIU987&#160;</div>
-                        <button class="remove-edt 0" title="Détruire l'edt">&#160;X&#160;</button>
+                        <button class="remove-edt 0" title="DÃ©truire l'edt">&#160;X&#160;</button>
                     </div>
                 </div>
                 <div class="edt edt-linked 1">
-                    <div class="edt-name">EDT LIÉ</div>
+                    <div class="edt-name">EDT LIÃ</div>
                     <div class="edt-interface">
                         <div class="code-edt code-admin 0" onclick="copyContent('AXI567')">&#160;AXI567&#160;</div>
-                        <label for="link-number" class="label-edt label-num" onclick="copyContent('00567823')">&#160;Numéro:&#160;</label>
+                        <label for="link-number" class="label-edt label-num" onclick="copyContent('00567823')">&#160;NumÃ©ro:&#160;</label>
                         <input id="link-number" class="link-edt" value=" 00567823"></input>
-                        <button class="save-number 1" title="Sauvegarder le numéro courant">&#160;S&#160;</button>
-                        <button class="remove-edt 1" title="Détruire l'edt">&#160;X&#160;</button>
+                        <button class="save-number 1" title="Sauvegarder le numÃ©ro courant">&#160;S&#160;</button>
+                        <button class="remove-edt 1" title="DÃ©truire l'edt">&#160;X&#160;</button>
                     </div>
                 </div>
                 

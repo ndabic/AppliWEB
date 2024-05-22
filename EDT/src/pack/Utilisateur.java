@@ -26,7 +26,7 @@ public class Utilisateur {
 	Collection<LinkUtilEDT> lienEDT;
 	
 	
-	
+	String cookie;
 	
 	
 	public Utilisateur() {}
@@ -84,6 +84,16 @@ public class Utilisateur {
 
 	public void setLienEDT(Collection<LinkUtilEDT> lienEDT) {
 		this.lienEDT = lienEDT;
+	}
+
+
+	public String getCookie() {
+		return cookie;
+	}
+
+
+	public void setCookie(String cookie) {
+		this.cookie = cookie;
 	}
 	
 	

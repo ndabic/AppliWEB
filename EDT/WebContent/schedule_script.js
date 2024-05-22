@@ -2,6 +2,7 @@ const delay = ms => new Promise(res => setTimeout(res, ms));
 let waitingTime = 30;
 
 document.addEventListener("DOMContentLoaded", function() {
+	checkCookieAjax();
     const days = ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi"];
 
     const scheduleTable = document.getElementById("schedule");
@@ -199,4 +200,48 @@ function place_cours(couleur, matiere, type, salle, groupes, prof, horaire, jour
     }
     showTimePlace();
     
+}
+
+function checkCookieAjax(){	
+    var formData = new FormData(); // Serialize form data
+
+    formData.append("op", "getUserInfos");
+    
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "Serv", true);
+    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8"); // Set content type
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState === XMLHttpRequest.DONE) {
+            if (xhr.status === 200) {
+                // Request succeeded
+            	var res = xhr.responseText;
+            	if (res.startsWith("success")) {
+            		var ress = res.split(":");
+            		var ress2 = ress[1].split(",");
+            		var profile = document.querySelector(".user-profile");
+            		profile.innerHTML = ress2[0] + " " + ress2[1];
+            	    profile.classList.remove("hide");
+            	    document.querySelector(".user-container").classList.add("connected");
+
+            	    document.querySelectorAll(".sign-button").forEach(function(button) {
+            	        button.classList.add("hide");
+            	    });
+            	} else {
+            		console.error("cookies différents:", res);
+            	    document.querySelector(".user-profile").classList.add("hide");
+            	    document.querySelector(".user-container").classList.remove("connected");
+
+            	    document.querySelectorAll(".sign-button").forEach(function(button) {
+            	        button.classList.remove("hide");
+            	    });
+            	}
+
+            } else {
+                // Request failed
+                console.error("Request failed with status:", xhr.status);
+            }
+        }
+    };
+    xhr.send(new URLSearchParams(formData)); // Send form data
+	
 }

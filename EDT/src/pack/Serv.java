@@ -85,18 +85,38 @@ public class Serv extends HttpServlet {
 			String mdp_conn = request.getParameter("mdp");
 			if (facade.verif_connexion(mail_conn, mdp_conn)) {
 				//response.getWriter().append("Found you !").append(request.getContextPath());
-				Cookie cookie = new Cookie("cookie-edt", String.valueOf(mail_conn)); // value equals the mail
-                cookie.setMaxAge(60 * 60); // 1 hour
-                response.addCookie(cookie);
+				Cookie cookie = new Cookie("cookie-edt", facade.getUserCookie(mail_conn)); // value equals the mail
+				cookie.setSecure(true);
+			    cookie.setHttpOnly(true);
+			    cookie.setPath("/");
+			    cookie.setMaxAge(60 * 60); // 1 hour
+			    cookie.setComment("SameSite=None; Secure"); // Add SameSite attribute manually
+			    response.addCookie(cookie);
 				request.getRequestDispatcher("Serv?op=afficherEDT").forward(request, response);
 			}else {
 				request.getRequestDispatcher("connexion.html").forward(request, response);
 			}
 			break;
 			
+		case "getUserInfos":
+			response.setContentType("text/html");
+	        response.setCharacterEncoding("UTF-8");
+	        PrintWriter outCookie = response.getWriter();
+	        if (cookieUser != null) {
+	        	String nomPrenom = facade.getUserInfos(cookieUser);
+	        	if (nomPrenom != null)
+	        		outCookie.print("success:"+nomPrenom);
+	        	else
+	        		outCookie.print("error: user not found");
+	        }else {
+	        	outCookie.print("error: wrong cookie");
+	        }
+	        outCookie.flush();
+	        break;
+			
 		case "afficherEDT":
-			//String mail_EDT = request.getParameter("mail");
-			Collection<Cours> lCours = facade.getCoursSemaine(cookieUser);
+			String mail_EDT = request.getParameter("mail");
+			Collection<Cours> lCours = facade.getCoursSemaine(mail_EDT);
 			request.setAttribute("lCours", lCours);
 			request.getRequestDispatcher("schedule.jsp").forward(request, response);
 			break;

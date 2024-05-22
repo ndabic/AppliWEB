@@ -2,6 +2,7 @@ package pack;
 
 import javax.ejb.Singleton;
 import javax.persistence.*;
+import javax.rmi.CORBA.Util;
 import javax.servlet.http.Part;
 
 import java.time.*;
@@ -91,6 +92,31 @@ public class Facade {
 		return coursSemaine;
 		
 	}
+	
+	public String getUserCookie(String mail) {
+		Utilisateur utilisateur = em.find(Utilisateur.class, mail);
+		return utilisateur.getCookie();
+	}
+	
+	public String getUserInfos(String cookie) {
+		String requete = "SELECT u FROM Utilisateur u WHERE u.cookie = :cookie";
+        TypedQuery<Utilisateur> query = em.createQuery(requete, Utilisateur.class);
+        query.setParameter("cookie", cookie);
+        query.setMaxResults(1);
+
+        // Execute the query and get the result list
+        Collection<Utilisateur> utilisateur = query.getResultList();
+        String res = null;
+        if (utilisateur.isEmpty() || utilisateur.size() > 1) {
+        	return res;
+        }else {
+        	for (Utilisateur u : utilisateur) {
+				return u.getPrenom() + "," + u.getNom() + "," + u.getMail();
+			}
+        }
+        return res;
+	}
+	
 	
 	public boolean verif_doublon_utilisateur(String mail_utilisateur) {
 		return (em.find(Utilisateur.class, mail_utilisateur) == null);
@@ -233,6 +259,10 @@ public class Facade {
 		nouveau.setPrenom(prenom);
 		nouveau.setMdp(mdp);
 		nouveau.setMail(mail);
+		String cook = nom+prenom+mail;
+		int cookie = cook.hashCode();
+		cook = String.valueOf(cookie);
+		nouveau.setCookie(cook);
 		
 		em.persist(nouveau);
 	}

@@ -59,6 +59,27 @@ h1 {
     background-color: var(--color-1);
 }
 
+.notif {
+    display: none;
+    position: fixed;
+    top: 70px;
+    right: 20px;
+    font-size: 16px;
+    border-radius: 1rem;
+    width: fit-content;
+    height: fit-content;
+    background-color: var(--color-1);
+    color: var(--color-5);
+    border: 0px solid var(--color-1);
+    padding: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    z-index: 9999;
+}
+
+.notif-show {
+    display: block;
+}
+
 /****/
 
 /** USER INTERFACE **/
@@ -82,20 +103,6 @@ h1 {
     box-shadow: 0 0 10px var(--color-0);
     border-bottom-left-radius: 1rem;
     overflow: hidden;
-}
-
-.user-container.connected {
-    background-image: linear-gradient(var(--color-2), var(--color-2));
-    background-size: 0% 100%;
-    background-color: var(--color-4);
-    background-repeat: no-repeat;
-    background-position: 100% 100%;
-    color: var(--color-1);
-    transition: background-position 500ms,
-    background-size 300ms, 
-    margin-left 700ms,
-    color 300ms
-    ease-in-out;
 }
 
 .user-container.connected {

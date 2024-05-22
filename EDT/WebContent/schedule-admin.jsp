@@ -16,6 +16,8 @@
 	<div class="header">
 		<h1>Emploi Du Temps</h1>
 		
+		<div class="notif hide"></div>
+		
 		<div class="user-container connected">
 
 			<div class="user-profile" onclick="location.href='profile.html'">Pierre ALIBERT</div>
@@ -89,7 +91,7 @@
 		if (request.getAttribute("edtCodes") != null){
 			String edtCodes = (String) request.getAttribute("edtCodes");
 			String[] codes = edtCodes.split(",");
-			out.println("<div class='edtCodes' value='"+codes[0]+"'></div>");
+			out.println("<div id='edtCodes' class='hide' value='"+codes[0]+"'></div>");
 		}
 		%>
 	</form>
