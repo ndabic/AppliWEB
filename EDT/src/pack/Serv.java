@@ -113,6 +113,38 @@ public class Serv extends HttpServlet {
 	        }
 	        outCookie.flush();
 	        break;
+	        
+		case "getEdts":
+			response.setContentType("text/html");
+	        response.setCharacterEncoding("UTF-8");
+	        PrintWriter outEDTs = response.getWriter();
+	        if (cookieUser != null) {
+	        	String EDTs = facade.getEDTs(cookieUser);
+	        	if (EDTs != null)
+	        		outEDTs.print("success:"+EDTs);
+	        	else
+	        		outEDTs.print("error: edts not found");
+	        }else {
+	        	outEDTs.print("error: wrong cookie");
+	        }
+	        outEDTs.flush();
+	        break;
+	        
+		case "createEDT":
+			response.setContentType("text/html");
+	        response.setCharacterEncoding("UTF-8");
+	        PrintWriter outCreateEDT = response.getWriter();
+	        if (cookieUser != null) {
+	        	String EDTs = facade.initEDT(cookieUser);
+	        	if (EDTs != null)
+	        		outCreateEDT.print("success:"+EDTs);
+	        	else
+	        		outCreateEDT.print("error: edts not found");
+	        }else {
+	        	outCreateEDT.print("error: wrong cookie");
+	        }
+	        outCreateEDT.flush();
+	        break;
 			
 		case "afficherEDT":
 			String mail_EDT = request.getParameter("mail");

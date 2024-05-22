@@ -36,20 +36,50 @@ public class Facade {
 		return codes;
 	}
 	
-	public void initEDT() {
+	public String initEDT(String cookie) {
+		String requete = "SELECT u FROM Utilisateur u WHERE u.cookie = :cookie";
+        TypedQuery<Utilisateur> query = em.createQuery(requete, Utilisateur.class);
+        query.setParameter("cookie", cookie);
+        query.setMaxResults(1);
+
+        // Execute the query and get the result list
+        Collection<Utilisateur> utilisateur = query.getResultList();
+        String res = null;
+        Utilisateur u = new Utilisateur();
+        if (utilisateur.isEmpty() || utilisateur.size() > 1) {
+        	return res;
+        }else {
+        	for (Utilisateur u2 : utilisateur) {
+				u = u2;
+			}
+        }
 		String[] codes = generateRandomCodes();
 		Edt edt = new Edt();
 		edt.setCodeAdmin(codes[0]);
 		edt.setCodeEtu(codes[1]);
 		edt.setCodeProf(codes[2]);
-		String requete = "SELECT * FROM Edt WHERE CodeAdmin=" + codes[0] +
-				"OR CodeEtu=" + codes[1] + "OR CodeProf=" + codes[2];
 		
-		while (!(em.createQuery(requete, Edt.class).getResultList().isEmpty())) {
+		String requete2 = "SELECT e FROM Edt e WHERE e.codeAdmin = :codeAdmin OR e.codeEtu = :codeEtu OR e.codeProf = :codeProf";
+		TypedQuery<Utilisateur> query2 = em.createQuery(requete, Utilisateur.class);
+        query2.setParameter("codeAdmin", codes[0]);
+        query2.setParameter("codeEtu", codes[1]);
+        query2.setParameter("codeProf", codes[2]);
+		
+		while (!query2.getResultList().isEmpty()) {
 			codes = generateRandomCodes();
+			requete2 = "SELECT e FROM Edt e WHERE e.codeAdmin = :codeAdmin OR e.codeEtu = :codeEtu OR e.codeProf = :codeProf";
+			query2 = em.createQuery(requete, Utilisateur.class);
+	        query2.setParameter("codeAdmin", codes[0]);
+	        query2.setParameter("codeEtu", codes[1]);
+	        query2.setParameter("codeProf", codes[2]);
 		}
 		
 		em.persist(edt);
+		
+		Collection<Edt> edts = u.getEdts_admin();
+		edts.add(edt);
+		String EDT = "0" + "," + edt.getCodeAdmin() + "," + edt.getCodeProf() + "," + edt.getCodeEtu() + ";";
+		return EDT;
 	}
 	
 	public List<LocalDateTime> getLundiVendrediCourant() {
@@ -115,6 +145,41 @@ public class Facade {
 			}
         }
         return res;
+	}
+	
+	public String getEDTs(String cookie) {
+		String requete = "SELECT u FROM Utilisateur u WHERE u.cookie = :cookie";
+        TypedQuery<Utilisateur> query = em.createQuery(requete, Utilisateur.class);
+        query.setParameter("cookie", cookie);
+        query.setMaxResults(1);
+
+        // Execute the query and get the result list
+        Collection<Utilisateur> utilisateur = query.getResultList();
+        String res = null;
+        Utilisateur u = new Utilisateur();
+        if (utilisateur.isEmpty() || utilisateur.size() > 1) {
+        	return res;
+        }else {
+        	for (Utilisateur u2 : utilisateur) {
+				u = u2;
+			}
+        	String EDTs = "";
+        	Collection<Edt> edtsAdmin = u.getEdts_admin();
+        	for (Edt edt : edtsAdmin) {
+				EDTs += "0" + "," + edt.getCodeAdmin() + "," + edt.getCodeProf() + "," + edt.getCodeEtu() + ";";
+			}
+        	Collection<LinkUtilEDT> edtsLinks = u.getLienEDT();
+        	for (LinkUtilEDT linkUtilEDT : edtsLinks) {
+        		EDTs += "1" + ",";
+				if (linkUtilEDT.getIsProf()) {
+					EDTs += linkUtilEDT.getEdt().getCodeProf() + ",";
+				}else {
+					EDTs += linkUtilEDT.getEdt().getCodeEtu() + ",";
+				}
+				EDTs += linkUtilEDT.getNumero() + ";";
+			}
+        	return EDTs;
+        }
 	}
 	
 	

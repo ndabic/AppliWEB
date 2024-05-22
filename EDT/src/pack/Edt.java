@@ -12,6 +12,8 @@ public class Edt {
 	String codeEtu;
 	String codeProf;
 	
+	String nom;
+	
 	@OneToMany(mappedBy = "edt", fetch=FetchType.EAGER)
 	Collection<LinkUtilEDT> liens_utilisateur;  // Numéros étudiants (liens entre l'étudiant et son emploi du temps)
 	
@@ -123,7 +125,14 @@ public class Edt {
 	public void setSalles(Collection<Salle> salles) {
 		this.salles = salles;
 	}
-	
-	
+
+	public String getNom() {
+		return nom;
+	}
+
+	public void setNom(String nom) {
+		this.nom = nom;
+	}
+
 
 }

@@ -63,6 +63,7 @@
                 <div class="edt edt-admin 0">
                     <div class="edt-name">EDT ADMINISTRATEUR</div>
                     <div class="edt-interface ">
+                    	
                         <div class="code-edt code-admin 0" onclick="copyContent('AXI567')">&#160;AXI567&#160;</div>
                         <div class="code-edt code-prof 0" onclick="copyContent('IUY543')">&#160;IUY543&#160;</div>
                         <div class="code-edt code-etu 0" onclick="copyContent('OIU987')">&#160;OIU987&#160;</div>
