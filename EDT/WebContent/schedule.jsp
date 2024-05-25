@@ -31,10 +31,18 @@
 		</div>
 	</div>
 	
+	<div class="line-container">
+		<div class="mondays-container">
+		</div>
+	</div>
+	
+	
 	<div class="schedule-container">
 	    <div id="schedule"></div>
 	    <div id="cours_container"></div>
 	</div>
+	
+	
 	
 	<form action="Serv" method="get">
 		<% 

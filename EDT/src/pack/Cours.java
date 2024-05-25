@@ -9,6 +9,7 @@ import javax.persistence.*;
 public class Cours {
 	
 	@Id
+	@GeneratedValue
 	int id;
 	
 	LocalDateTime debut, fin;

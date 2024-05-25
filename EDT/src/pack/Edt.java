@@ -70,14 +70,6 @@ public class Edt {
 		this.admins = admins;
 	}
 
-	public Collection<LinkUtilEDT> getLiens_utilisateur_EDT() {
-		return liens_utilisateur;
-	}
-
-	public void setLiens_utilisateur_EDT(Collection<LinkUtilEDT> liens_utilisateur_EDT) {
-		this.liens_utilisateur = liens_utilisateur_EDT;
-	}
-
 	public Collection<Cours> getCours() {
 		return cours;
 	}

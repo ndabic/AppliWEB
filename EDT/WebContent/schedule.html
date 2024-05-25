@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Emploi Du Temps</title>
     <link rel="stylesheet" type="text/css" href="schedule_style.css">
-	<link rel="icon" type="image/png" href="../assets/Logo.png">
+	<link rel="icon" type="image/png" href="./assets/Logo.png">
 </head>
 <body>
 
@@ -14,25 +14,31 @@
 		
 		<div class="user-container">
 
-
+			<div class="user-profile " onclick="location.href='profile.html'"></div>
 		
-			<button class="sign-button button-color-1">
+			<button class="sign-button button-color-1 hide" onclick="location.href='connexion.html'">
 				Connexion
 			</button>
 
-			<button class="sign-button button-color-2">
+			<button class="sign-button button-color-2 hide" onclick="location.href='inscription.html'">
 				Inscription
 			</button>
 
 		</div>
 	</div>
 	
-
+	<div class="line-container">
+		<div class="mondays-container">
+		</div>
+	</div>
+	
+	
 	<div class="schedule-container">
 	    <div id="schedule"></div>
 	    <div id="cours_container"></div>
 	</div>
 	
+
 
 <script src="schedule_script.js"></script>
 </body>

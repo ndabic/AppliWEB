@@ -20,7 +20,7 @@
 		
 		<div class="user-container connected">
 
-			<div class="user-profile" onclick="location.href='profile.html'">Pierre ALIBERT</div>
+			<div class="user-profile" onclick="location.href='profile.html'"></div>
 		
 			<button class="sign-button button-color-1 hide" onclick="location.href='connexion.html'">
 				Connexion
@@ -36,17 +36,11 @@
 	<div class="admin-button">
 		
 		<div class="dropdown">
-			<form class="hide" id="getScheduleGroupForm" name="getScheduleGroupForm" method="post" action="Serv">
+			<form class="hide" id="getCoursGroupes" name="getCoursGroupes" method="post" action="Serv">
 				<input type="text" id="groups-schedule-view" name="groups-schedule-view">
-                <input type="hidden" name="op" value="getScheduleGroupForm">
             </form>
 			<button onclick="toggleDropdownSendForm('dropdown-div6')" class="add-button view-button">Vue Groupes:</button>
 			<div id="dropdown-div6" class="view-content">
-				<a onclick="toggleClicked(this, 'groups-schedule-view')" class="choice-element">SN</a>
-				<a onclick="toggleClicked(this, 'groups-schedule-view')" class="choice-element">3EA</a>
-				<a onclick="toggleClicked(this, 'groups-schedule-view')" class="choice-element">MFEE</a>
-				<a onclick="toggleClicked(this, 'groups-schedule-view')" class="choice-element">M1</a>
-				<a onclick="toggleClicked(this, 'groups-schedule-view')" class="choice-element">M2</a>
 			  
 		   	</div>
 	  	</div>
@@ -66,7 +60,7 @@
 			 </div>
 		</div>
 
-		
+		<div class="mondays-container"></div>
 	
 	</div>
 	
@@ -90,8 +84,7 @@
 		<% 
 		if (request.getAttribute("edtCodes") != null){
 			String edtCodes = (String) request.getAttribute("edtCodes");
-			String[] codes = edtCodes.split(",");
-			out.println("<div id='edtCodes' class='hide' value='"+codes[0]+"'></div>");
+			out.println("<div id='edtCodes' class='hide'>"+edtCodes+"</div>");
 		}
 		%>
 	</form>

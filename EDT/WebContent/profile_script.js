@@ -1,6 +1,8 @@
 var btnAddEdt = document.querySelector(".button-add-edt");
 var edtScroller = document.querySelector("edt-scroller");
 
+var nbEDT = 0;
+
 document.addEventListener("DOMContentLoaded", function() {
 	updateUserInfoAjax();
 	
@@ -34,7 +36,7 @@ document.addEventListener("DOMContentLoaded", function() {
       });
   });
   
-  getEDTsAjax();
+  getEdtsAjax();
 });
 
 btnAddEdt.addEventListener("click", function() {
@@ -76,12 +78,44 @@ function getEdtsAjax(){
             	var res = xhr.responseText;
             	if (res.startsWith("success")) {
             		var ress = res.split(":");
-            		var ress2 = ress[1].split(",");
-            	    document.getElementById("user-firstname").value = ress2[0];
-            	    document.getElementById("user-name").value = ress2[1];
-            	    document.getElementById("user-email").value = ress2[2];
+            		var edts = ress[1].split(";");
+            		var edtScroller = document.querySelector(".edt-scroller");
+            		for(let i = 0; i < edts.length-1; i++){
+            			var edt = edts[i].split(",");
+            			if (edt[0] == "0"){ // edt admin
+            				edtScroller.innerHTML += `
+		            					<div class="edt edt-admin ${nbEDT}" onclick="adminEdtForm(this)">
+				                            <div class="edt-name">${edt[1]}</div>
+				                            <div class="edt-interface ">
+				                            	<div class="label-code">Admin:</div>
+				                                <div class="code-edt padded-container code-admin ${nbEDT}" onclick="copyContent('${edt[2]}')">${edt[2]}</div>
+				                                <div class="label-code">Professeur:</div>
+				                                <div class="code-edt padded-container code-prof ${nbEDT}" onclick="copyContent('${edt[3]}')">${edt[3]}</div>
+				                                <div class="label-code">Etudiant:</div>
+				                                <div class="code-edt padded-container code-etu ${nbEDT}" onclick="copyContent('${edt[4]}')">${edt[4]}</div>
+				                                <button class="remove-edt ${nbEDT}" title="Détruire l'edt">X</button>
+				                            </div>
+				                        </div>
+				                        `
+            				
+            			}else{
+            				edtScroller.innerHTML += `
+		            					<div class="edt edt-linked ${nbEDT}">
+						                    <div class="edt-name">${edt[1]}</div>
+						                    <div class="edt-interface">
+						                        <div class="code-edt padded-container code-admin ${nbEDT}" onclick="copyContent('${edt[2]}')">${edt[2]}</div>
+						                        <label for="link-number" class="label-edt label-num padded-container" onclick="copyContent('${edt[3]}')">Numéro:</label>
+						                        <input id="link-number" class="link-edt padded-container" value="${edt[3]}"></input>
+						                        <button class="save-number ${nbEDT}" title="Sauvegarder le numéro courant">S</button>
+						                        <button class="remove-edt ${nbEDT}" title="Détruire l'edt">X</button>
+						                    </div>
+						                </div>
+						                `
+            			}
+            			nbEDT += 1;
+            		}
             	} else {
-            		console.error("pas d'utilisateur:", res);
+            		console.error(res);
             	}
 
             } else {
@@ -124,7 +158,7 @@ function validateForm(popupInfo) {
     return true;
 }
 
-function submitFormAjax(formID) {
+function createLinkEDTAjax(formID) {
 	if (validateForm(formID)){
 		var form = document.getElementById(formID);
 	
@@ -136,11 +170,45 @@ function submitFormAjax(formID) {
 	    xhr.onreadystatechange = function() {
 	        if (xhr.readyState === XMLHttpRequest.DONE) {
 	            if (xhr.status === 200) {
-	                // Request succeeded
-	                document.querySelector("h1").innerHTML = xhr.responseText;
-	                popUpContainer.classList.toggle("show-flex");
-	                popUp.innerHTML = "";
-	                contentAdded();
+	            	var res = xhr.responseText;
+	            	if (res.startsWith("success")) {
+	            		var ress = res.split(":");
+	            		var edtScroller = document.querySelector(".edt-scroller");
+	            		var edt = ress[1].split(",");
+            			if (edt[0] == "0"){ // edt admin
+            				edtScroller.innerHTML += `
+		            					<div class="edt edt-admin ${nbEDT}" onclick="adminEdtForm(this)">
+				                            <div class="edt-name">${edt[1]}</div>
+				                            <div class="edt-interface ">
+				                            	<div class="label-code">Admin:</div>
+				                                <div class="code-edt padded-container code-admin ${nbEDT}" onclick="copyContent('${edt[2]}')">${edt[2]}</div>
+				                                <div class="label-code">Professeur:</div>
+				                                <div class="code-edt padded-container code-prof ${nbEDT}" onclick="copyContent('${edt[3]}')">${edt[3]}</div>
+				                                <div class="label-code">Etudiant:</div>
+				                                <div class="code-edt padded-container code-etu ${nbEDT}" onclick="copyContent('${edt[4]}')">${edt[4]}</div>
+				                                <button class="remove-edt ${nbEDT}" title="Détruire l'edt">X</button>
+				                            </div>
+				                        </div>
+				                        `
+            				
+            			}else{
+            				edtScroller.innerHTML += `
+		            					<div class="edt edt-linked ${nbEDT}">
+						                    <div class="edt-name">${edt[1]}</div>
+						                    <div class="edt-interface">
+						                        <div class="code-edt padded-container code-admin ${nbEDT}" onclick="copyContent('${edt[2]}')">${edt[2]}</div>
+						                        <label for="link-number" class="label-edt label-num padded-container" onclick="copyContent('${edt[3]}')">Numéro:</label>
+						                        <input id="link-number" class="link-edt padded-container" value="${edt[3]}"></input>
+						                        <button class="save-number ${nbEDT}" title="Sauvegarder le numéro courant">S</button>
+						                        <button class="remove-edt ${nbEDT}" title="Détruire l'edt">X</button>
+						                    </div>
+						                </div>
+						                `
+            			}
+            			nbEDT += 1;
+	            	} else {
+	            		console.error(res);
+	            	}
 	            } else {
 	                // Request failed
 	                console.error("Request failed with status:", xhr.status);
@@ -186,6 +254,39 @@ function updateUserInfoAjax(){
 	
 }
 
+function adminEdtForm(self) {
+	
+	
+	var codeA = self.querySelector(".code-admin").innerHTML;
+	var codeP = self.querySelector(".code-prof").innerHTML;
+	var codeE = self.querySelector(".code-etu").innerHTML;
+    // Create a new form element
+    var form = document.createElement('form');
+    form.method = 'POST'; // or 'GET'
+    form.action = 'Serv'; // replace with your endpoint
+
+    // Create and append input elements to the form
+    var nameInput = document.createElement('input');
+    nameInput.type = 'hidden';
+    nameInput.name = 'edt';
+    nameInput.value = ""+codeA+","+codeP+","+codeE; // replace with dynamic value if needed
+    form.appendChild(nameInput);
+    
+    var nameInput = document.createElement('input');
+    nameInput.type = 'hidden';
+    nameInput.name = 'op';
+    nameInput.value = "adminEDT"; // replace with dynamic value if needed
+    form.appendChild(nameInput);
+
+    // Append the form to the document body
+    document.body.appendChild(form);
+
+    // Submit the form
+    form.submit();
+}
+
+
+
 
 
 var popUpContainer = document.querySelector(".popup-container");
@@ -210,7 +311,7 @@ function toggleShow(self) {
 	                            </tr>
 	                        </table>
 	                        <div class="center-line">
-	                            <button type="button" class="submit-button" onclick="submitFormAjax('createEdt')">Créer</button>
+	                            <button type="button" class="submit-button" onclick="createLinkEDTAjax('createEdt')">Créer</button>
 	                        </div>
 	                        <input type="hidden" name="op" value="createEdt">
 	                    </form>
@@ -240,7 +341,7 @@ function toggleShow(self) {
 	                            </tr>
 	                        </table>
 	                        <div class="center-line">
-	                            <button type="button" class="submit-button" onclick="submitFormAjax('linkEdt')">Lier</button>
+	                            <button type="button" class="submit-button" onclick="createLinkEDTAjax('linkEdt')">Lier</button>
 	                        </div>
 	                        <input type="hidden" name="op" value="linkEdt">
 	                    </form>

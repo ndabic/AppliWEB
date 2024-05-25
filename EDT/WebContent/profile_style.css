@@ -415,6 +415,25 @@ h2 {
     ease-in-out;
 }
 
+.label-code {
+	margin-right: 5px;
+	font-size: 24px;
+	font-weight: bold;
+	color: var(--color-1);
+	transition: background-position 500ms,
+    background-size 1000ms, 
+    color 600ms
+    ease-in-out;
+}
+
+.edt:hover .label-code {
+	color: var(--color-5);
+	transition: background-position 500ms,
+    background-size 1000ms, 
+    color 600ms
+    ease-in-out;
+}
+
 .label-edt {
     display: flex;
     justify-content: center;
@@ -436,6 +455,8 @@ h2 {
     color 600ms
     ease-in-out;
 }
+
+
 
 .edt:hover .label-edt {
     background-size: 100% 100%;

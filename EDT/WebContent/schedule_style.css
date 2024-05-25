@@ -285,4 +285,76 @@ h1 {
 	display: none;
 }
 
+.line-container {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.mondays-container {
+	padding: 5px 10px 5px 10px;
+	margin: 0px 10px 0px 10px;
+	position: relative;
+	max-width: 80%;
+	overflow-y: scroll;
+	display: flex;
+	align-items: center;
+	background-color: var(--color-4);
+	border: 3px solid var(--color-2);
+	border-radius: 1rem;
+	box-shadow: 0 0 10px var(--color-0);
+  	gap: 0.2rem;
+}
+
+.monday-button {
+  border-radius: .6rem;
+  padding: 10px;
+  font-size: 16px;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+  
+  background-image: linear-gradient(var(--color-1), var(--color-1));
+  background-size: 0% 100%;
+  background-color: var(--color-3);
+  background-repeat: no-repeat;
+  background-position: 0% 100%;
+  color: var(--color-1);
+  transition: background-position 500ms,
+  background-size 1000ms, 
+  color 600ms
+  ease-in-out;
+}
+
+.monday-button:hover {
+    background-size: 100% 100%;
+    background-position: 0% 100%;
+    color: var(--color-4);
+    transition: background-position 100ms, 
+    background-size 600ms, 
+    color 800ms
+    ease-in-out;
+}
+
+.monday-button.clicked{
+    background-size: 100% 100%;
+    background-position: 0% 100%;
+    color: var(--color-4);
+    transition: background-position 100ms, 
+    background-size 600ms, 
+    color 800ms
+    ease-in-out;
+}
+
+.monday-button.clicked:hover {
+    background-size: 100% 100%;
+    background-position: 0% 100%;
+    color: var(--color-4);
+    transition: background-position 100ms, 
+    background-size 600ms, 
+    color 800ms
+    ease-in-out;
+}
+
+
 /**/

@@ -1,11 +1,13 @@
 package pack;
 
+import javax.annotation.PostConstruct;
 import javax.ejb.Singleton;
 import javax.persistence.*;
 import javax.rmi.CORBA.Util;
 import javax.servlet.http.Part;
 
 import java.time.*;
+import java.time.temporal.TemporalAdjusters;
 import java.util.*;
 
 import java.io.BufferedReader;
@@ -36,7 +38,7 @@ public class Facade {
 		return codes;
 	}
 	
-	public String initEDT(String cookie) {
+	public String initEDT(String cookie, String nomEdt) {
 		String requete = "SELECT u FROM Utilisateur u WHERE u.cookie = :cookie";
         TypedQuery<Utilisateur> query = em.createQuery(requete, Utilisateur.class);
         query.setParameter("cookie", cookie);
@@ -54,13 +56,10 @@ public class Facade {
 			}
         }
 		String[] codes = generateRandomCodes();
-		Edt edt = new Edt();
-		edt.setCodeAdmin(codes[0]);
-		edt.setCodeEtu(codes[1]);
-		edt.setCodeProf(codes[2]);
+		
 		
 		String requete2 = "SELECT e FROM Edt e WHERE e.codeAdmin = :codeAdmin OR e.codeEtu = :codeEtu OR e.codeProf = :codeProf";
-		TypedQuery<Utilisateur> query2 = em.createQuery(requete, Utilisateur.class);
+		TypedQuery<Edt> query2 = em.createQuery(requete2, Edt.class);
         query2.setParameter("codeAdmin", codes[0]);
         query2.setParameter("codeEtu", codes[1]);
         query2.setParameter("codeProf", codes[2]);
@@ -68,17 +67,76 @@ public class Facade {
 		while (!query2.getResultList().isEmpty()) {
 			codes = generateRandomCodes();
 			requete2 = "SELECT e FROM Edt e WHERE e.codeAdmin = :codeAdmin OR e.codeEtu = :codeEtu OR e.codeProf = :codeProf";
-			query2 = em.createQuery(requete, Utilisateur.class);
+			query2 = em.createQuery(requete, Edt.class);
 	        query2.setParameter("codeAdmin", codes[0]);
 	        query2.setParameter("codeEtu", codes[1]);
 	        query2.setParameter("codeProf", codes[2]);
 		}
 		
+		Edt edt = new Edt();
+		edt.setCodeAdmin(codes[0]);
+		edt.setCodeEtu(codes[1]);
+		edt.setCodeProf(codes[2]);
+		edt.setNom(nomEdt);
+		
 		em.persist(edt);
 		
 		Collection<Edt> edts = u.getEdts_admin();
 		edts.add(edt);
-		String EDT = "0" + "," + edt.getCodeAdmin() + "," + edt.getCodeProf() + "," + edt.getCodeEtu() + ";";
+		String EDT = "0" + "," + edt.getNom() + "," + edt.getCodeAdmin() + "," + edt.getCodeProf() + "," + edt.getCodeEtu();
+		return EDT;
+	}
+	
+	public String linkEDT(String cookie, String codeEdt, String numLink) {
+		String requete = "SELECT u FROM Utilisateur u WHERE u.cookie = :cookie";
+        TypedQuery<Utilisateur> query = em.createQuery(requete, Utilisateur.class);
+        query.setParameter("cookie", cookie);
+        query.setMaxResults(1);
+
+        // Execute the query and get the result list
+        Collection<Utilisateur> utilisateur = query.getResultList();
+        String res = null;
+        Utilisateur u = new Utilisateur();
+        if (utilisateur.isEmpty() || utilisateur.size() > 1) {
+        	return "utilisateur non trouvé";
+        }else {
+        	for (Utilisateur u2 : utilisateur) {
+				u = u2;
+			}
+        }
+        
+        String requete2 = "SELECT e FROM Edt e WHERE e.codeEtu = :codeEdt";
+        TypedQuery<Edt> query2 = em.createQuery(requete2, Edt.class);
+        query2.setParameter("codeEdt", codeEdt);
+        query2.setMaxResults(1);
+
+        // Execute the query and get the result list
+        Collection<Edt> edt = query2.getResultList();
+        Edt e = new Edt();
+        if (edt.isEmpty() || edt.size() > 1) {
+        	return "edt non trouvé";
+        }else {
+        	for (Edt e2 : edt) {
+				e = e2;
+			}
+        }
+        
+        Collection<LinkUtilEDT> links = e.getLiens_utilisateur();
+        boolean found = false;
+        for (LinkUtilEDT link : links) {
+			if (link.getNumero() == numLink) {
+				link.setUtilisateur(u);
+				found = true;
+				break;
+			}
+		}
+        
+        if (!found) {
+        	return "link non trouvé";
+        }
+		
+		String EDT = "1" + "," + e.getNom() + "," + e.getCodeAdmin() + "," + e.getCodeProf() + "," + e.getCodeEtu();
+		
 		return EDT;
 	}
 	
@@ -100,7 +158,7 @@ public class Facade {
 		
 	}
 	
-	public Collection<Cours> getCoursSemaine(String mail_utilisateur){
+	public Collection<Cours> getCoursSemaineV0(String mail_utilisateur){
 		List<LocalDateTime> lundiVendredi = getLundiVendrediCourant();
 		LocalDateTime lundi = lundiVendredi.get(0);
 		LocalDateTime vendredi = lundiVendredi.get(1);
@@ -122,6 +180,118 @@ public class Facade {
 		return coursSemaine;
 		
 	}
+	
+	public List<LocalDateTime> getLundiVendredi(String lundiSemaine) {
+		String[] lundiDate = lundiSemaine.split(",");
+		LocalDate lundi = LocalDate.of(Integer.parseInt(lundiDate[2]), Integer.parseInt(lundiDate[1]), Integer.parseInt(lundiDate[0]));
+		LocalDate vendredi = lundi.plusDays(4);
+        
+        LocalTime matin = LocalTime.of(1, 0, 0);
+        LocalDateTime lundiMatin = LocalDateTime.of(lundi, matin);
+        
+        LocalTime soir = LocalTime.of(23, 0, 0);
+        LocalDateTime vendrediSoir = LocalDateTime.of(vendredi, soir);
+		List<LocalDateTime> lundiVendredi = new ArrayList<>();
+		lundiVendredi.add(lundiMatin);
+		lundiVendredi.add(vendrediSoir);
+		return lundiVendredi;
+		
+	}
+	
+	public String getCoursSemaine(String cookie, String lundiSemaine){
+		List<LocalDateTime> lundiVendredi = getLundiVendredi(lundiSemaine);
+		LocalDateTime lundi = lundiVendredi.get(0);
+		LocalDateTime vendredi = lundiVendredi.get(1);
+		String coursSemaine = "";
+		
+		String requete = "SELECT u FROM Utilisateur u WHERE u.cookie = :cookie";
+        TypedQuery<Utilisateur> query = em.createQuery(requete, Utilisateur.class);
+        query.setParameter("cookie", cookie);
+        query.setMaxResults(1);
+        Utilisateur utilisateur = query.getSingleResult();
+		
+		Collection<LinkUtilEDT> links = utilisateur.getLienEDT();
+		for(LinkUtilEDT link : links) {
+			Collection<Groupe> groupes = link.getGroupes();
+			for (Groupe groupe : groupes) {
+				Collection<Cours> coursCourant = groupe.getCours_etude();
+				for (Cours cours : coursCourant) {
+					if (cours.getDebut().isAfter(lundi) && cours.getFin().isBefore(vendredi)) {
+						
+						coursSemaine += cours.getMatiere().getNom() + "," + cours.getType().getNom() + ",";
+						for (Salle s : cours.getSalle()) {
+							coursSemaine += s.getNom() + "#";
+						}
+						coursSemaine += ",";
+						for (Groupe g : cours.getGroupes()) {
+							coursSemaine += g.getNom() + "#";
+						}
+						coursSemaine += ",";
+						for (LinkUtilEDT l : cours.getProf()) {
+							coursSemaine += l.getPrenom() + " " + l.getNom() + "#";
+						}
+						coursSemaine += "," + cours.getDebut().getHour() + "," + cours.getDebut().getMinute();
+						coursSemaine += "," + cours.getFin().getHour() + "," + cours.getFin().getMinute();
+						coursSemaine += "," + cours.getDebut().getDayOfWeek().getValue() + ";";
+					}
+				
+				}
+			}
+		}	
+		
+		return coursSemaine;
+		
+	}
+	
+	
+	public String getCoursGroupes(String cookie, String lundiSemaine, String gS, String edtS){
+		List<LocalDateTime> lundiVendredi = getLundiVendredi(lundiSemaine);
+		LocalDateTime lundi = lundiVendredi.get(0);
+		LocalDateTime vendredi = lundiVendredi.get(1);
+		String coursSemaine = "";
+		
+		String[] codes = edtS.split(",");
+		Edt edt = em.find(Edt.class, codes[0]);
+		Collection<Groupe> groupes = new ArrayList<>();
+		
+		String[] groupesS = gS.split(",");
+		for (int i = 0; i < groupesS.length; i++) {
+			String gr = groupesS[i];
+			Groupe groupe = em.find(Groupe.class, gr);
+			if (groupe != null)
+				groupes.add(groupe);
+		}
+		
+		
+		for (Groupe groupe : groupes) {
+			Collection<Cours> coursCourant = groupe.getCours_etude();
+			for (Cours cours : coursCourant) {
+				if (cours.getDebut().isAfter(lundi) && cours.getFin().isBefore(vendredi)) {
+					
+					coursSemaine += cours.getMatiere().getNom() + "," + cours.getType().getNom() + ",";
+					for (Salle s : cours.getSalle()) {
+						coursSemaine += s.getNom() + "#";
+					}
+					coursSemaine += ",";
+					for (Groupe g : cours.getGroupes()) {
+						coursSemaine += g.getNom() + "#";
+					}
+					coursSemaine += ",";
+					for (LinkUtilEDT l : cours.getProf()) {
+						coursSemaine += l.getPrenom() + " " + l.getNom() + "#";
+					}
+					coursSemaine += "," + cours.getDebut().getHour() + "," + cours.getDebut().getMinute();
+					coursSemaine += "," + cours.getFin().getHour() + "," + cours.getFin().getMinute();
+					coursSemaine += "," + cours.getDebut().getDayOfWeek().getValue() + ";";
+				}
+			
+			}
+		}
+		
+		return coursSemaine;
+		
+	}
+	
 	
 	public String getUserCookie(String mail) {
 		Utilisateur utilisateur = em.find(Utilisateur.class, mail);
@@ -154,32 +324,24 @@ public class Facade {
         query.setMaxResults(1);
 
         // Execute the query and get the result list
-        Collection<Utilisateur> utilisateur = query.getResultList();
-        String res = null;
-        Utilisateur u = new Utilisateur();
-        if (utilisateur.isEmpty() || utilisateur.size() > 1) {
-        	return res;
-        }else {
-        	for (Utilisateur u2 : utilisateur) {
-				u = u2;
+        Utilisateur u = query.getSingleResult();
+    	String EDTs = "";
+    	Collection<Edt> edtsAdmin = u.getEdts_admin();
+    	for (Edt edt : edtsAdmin) {
+			EDTs += "0" + "," + edt.getNom() + "," + edt.getCodeAdmin() + "," + edt.getCodeProf() + "," + edt.getCodeEtu() + ";";
+		}
+    	Collection<LinkUtilEDT> edtsLinks = u.getLienEDT();
+    	for (LinkUtilEDT linkUtilEDT : edtsLinks) {
+    		EDTs += "1" + "," + linkUtilEDT.getEdt().getNom() + ",";
+    		
+			if (linkUtilEDT.getIsProf()) {
+				EDTs += linkUtilEDT.getEdt().getCodeProf() + ",";
+			}else {
+				EDTs += linkUtilEDT.getEdt().getCodeEtu() + ",";
 			}
-        	String EDTs = "";
-        	Collection<Edt> edtsAdmin = u.getEdts_admin();
-        	for (Edt edt : edtsAdmin) {
-				EDTs += "0" + "," + edt.getCodeAdmin() + "," + edt.getCodeProf() + "," + edt.getCodeEtu() + ";";
-			}
-        	Collection<LinkUtilEDT> edtsLinks = u.getLienEDT();
-        	for (LinkUtilEDT linkUtilEDT : edtsLinks) {
-        		EDTs += "1" + ",";
-				if (linkUtilEDT.getIsProf()) {
-					EDTs += linkUtilEDT.getEdt().getCodeProf() + ",";
-				}else {
-					EDTs += linkUtilEDT.getEdt().getCodeEtu() + ",";
-				}
-				EDTs += linkUtilEDT.getNumero() + ";";
-			}
-        	return EDTs;
-        }
+			EDTs += linkUtilEDT.getNumero() + ";";
+		}
+    	return EDTs;
 	}
 	
 	
@@ -201,7 +363,7 @@ public class Facade {
 	public boolean verif_horaire_groupe(Groupe groupe, LocalDateTime nouvDebut, LocalDateTime nouvFin, Edt edtAssocie) {
 		
 
-        String requete = "SELECT * FROM Cours c WHERE c.edt_associe = :edtAssocie AND c.groupes = :groupe AND (c.debut < :nouvFin AND :nouvDebut < c.fin)";
+		String requete = "SELECT c FROM Cours c WHERE c.edt_associe = :edtAssocie AND :groupe MEMBER OF c.groupes AND (c.debut < :nouvFin AND :nouvDebut < c.fin)";
         TypedQuery<Cours> query = em.createQuery(requete, Cours.class);
         query.setParameter("nouvDebut", nouvDebut);
         query.setParameter("nouvFin", nouvFin);
@@ -216,7 +378,7 @@ public class Facade {
 	
 	public boolean verif_horaire_prof(LinkUtilEDT prof, LocalDateTime nouvDebut, LocalDateTime nouvFin, Edt edtAssocie) {
 
-        String requete = "SELECT * FROM Cours c WHERE c.edt_associe = :edtAssocie AND c.prof = :prof AND (c.debut < :nouvFin AND :nouvDebut < c.fin)";
+        String requete = "SELECT c FROM Cours c WHERE c.edt_associe = :edtAssocie AND :prof MEMBER OF c.prof AND (c.debut < :nouvFin AND :nouvDebut < c.fin)";
         TypedQuery<Cours> query = em.createQuery(requete, Cours.class);
         query.setParameter("nouvDebut", nouvDebut);
         query.setParameter("nouvFin", nouvFin);
@@ -232,7 +394,7 @@ public class Facade {
 	public boolean verif_horaire_salle(Salle salle, LocalDateTime nouvDebut, LocalDateTime nouvFin, Edt edtAssocie) {
 		
 
-        String requete = "SELECT * FROM Cours c WHERE c.edt_associe = :edtAssocie AND c.salle = :salle AND (c.debut < :nouvFin AND :nouvDebut < c.fin)";
+        String requete = "SELECT c FROM Cours c WHERE c.edt_associe = :edtAssocie AND :salle MEMBER OF c.salle AND (c.debut < :nouvFin AND :nouvDebut < c.fin)";
         TypedQuery<Cours> query = em.createQuery(requete, Cours.class);
         query.setParameter("nouvDebut", nouvDebut);
         query.setParameter("nouvFin", nouvFin);
@@ -280,7 +442,9 @@ public class Facade {
 		
 		Collection<LinkUtilEDT> list_profs = new ArrayList<LinkUtilEDT>();
 		for(String prof_string : profs) {
-			LinkUtilEDT p = em.find(LinkUtilEDT.class, prof_string);
+			String[] prof = prof_string.split(" ");
+			
+			LinkUtilEDT p = em.find(LinkUtilEDT.class, prof[0]);
 			if (p != null) {
 				if (!verif_horaire_prof(p, debut, fin, edt_associe)) {
 					return ("Professeur(e) indisponible: "+p.getNom());
@@ -332,11 +496,16 @@ public class Facade {
 		em.persist(nouveau);
 	}
 	
-	
+	// ONLY FOR DEV ///////////////////////////////////////////////////
+	/*@PostConstruct
+	public void initialisation() {
+		ajout_cours("8", "0", "15", "45", "24", "5", "2024", )
+	}*/
 	
 	public void ajout_cours(String heureDebut_string, String minuteDebut_string, String heureFin_string, String minuteFin_string, 
             String jour_string, String mois_string, String annee_string, String type_string, String matiere_string, 
             String salle_string, String professeur_string, String groupe_string, String infosupp_string, String edt) {
+		
 		int heuredebut =  Integer.parseInt(heureDebut_string) ;
 		int minutedebut = Integer.parseInt(minuteDebut_string);
 		int heurefin = Integer.parseInt(heureFin_string);
@@ -389,13 +558,22 @@ public class Facade {
         em.persist(cours);
 	}
         
-    public void ajout_etudiant(String numero,String prenom,String nom, String edt) {
+    public void ajout_etudiant(String numero,String prenom,String nom, String edt, String groupes) {
     	//on crée l'étudiant
     	LinkUtilEDT etudiant = new LinkUtilEDT();
     	etudiant.setNumero(numero);
     	etudiant.setPrenom(prenom);
     	etudiant.setNom(nom);
     	etudiant.setIsProf(false);
+    	Collection<Groupe> grEtu = new ArrayList<>();
+    	String[] groupesS = groupes.split(",");
+    	for(String gS : groupesS) {
+    		Groupe g = em.find(Groupe.class, gS);
+    		if (g != null) {
+    			grEtu.add(g);
+    		}
+    	}
+    	etudiant.setGroupes(grEtu);
     	
     	String[] codes = edt.split(",");
     	Edt edt_associe = em.find(Edt.class, codes[0]);
@@ -436,14 +614,14 @@ public class Facade {
     
     public void ajout_type(String nom, String edt) {
     	//on crée le prof
-    	Matiere matiere = new Matiere();
-    	matiere.setNom(nom);
+    	Type type = new Type();
+    	type.setNom(nom);
     	
     	String[] codes = edt.split(",");
     	Edt edt_associe = em.find(Edt.class, codes[0]);
-    	matiere.setEdt_associe(edt_associe);
+    	type.setEdt_associe(edt_associe);
     	
-    	em.persist(matiere);
+    	em.persist(type);
     
     }
     
@@ -460,7 +638,7 @@ public class Facade {
     
     }
     
-    public void creer_groupe(String nom, Part liste_etudiant_csv, String edt) {
+    public void creer_groupe(String nom, String edt) {
     	Groupe groupe = new Groupe();
     	groupe.setNom(nom);
     	
@@ -468,7 +646,7 @@ public class Facade {
     	Edt edt_associe = em.find(Edt.class, codes[0]);
     	groupe.setEdt_associe(edt_associe);
     	
-    	Collection<LinkUtilEDT> liste_eleves = new ArrayList<LinkUtilEDT>();
+    	/*Collection<LinkUtilEDT> liste_eleves = new ArrayList<LinkUtilEDT>();
     	
     	BufferedReader reader;
 		try {
@@ -484,7 +662,9 @@ public class Facade {
 		}  catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
+		}*/
+    	
+    	em.persist(groupe);
     }
     
     public String getGroupesEDT(String edt) {
@@ -493,7 +673,7 @@ public class Facade {
     	Collection<Groupe> groupes = edt_associe.getGroupes();
     	String res = "";
     	for(Groupe g : groupes) {
-    		res += ","+g;
+    		res += ","+g.getNom();
     	}
     	if (res != "") {
     		res = res.substring(1);
@@ -507,7 +687,7 @@ public class Facade {
     	Collection<Salle> salles = edt_associe.getSalles();
     	String res = "";
     	for(Salle s : salles) {
-    		res += ","+s;
+    		res += ","+s.getNom();
     	}
     	if (res != "") {
     		res = res.substring(1);
@@ -518,11 +698,11 @@ public class Facade {
     public String getProfsEDT(String edt) {
     	String[] codes = edt.split(",");
     	Edt edt_associe = em.find(Edt.class, codes[0]);
-    	Collection<LinkUtilEDT> all_links = edt_associe.getLiens_utilisateur_EDT();
+    	Collection<LinkUtilEDT> all_links = edt_associe.getLiens_utilisateur();
     	String res = "";
     	for(LinkUtilEDT l : all_links) {
     		if (l.getIsProf()) // keep only links that are teachers
-    			res += ","+l;
+    			res += ","+l.getNumero()+" "+l.getPrenom()+" "+l.getNom();
     	}
     	if (res != "") {
     		res = res.substring(1);
@@ -536,7 +716,7 @@ public class Facade {
     	Collection<Matiere> matieres = edt_associe.getMatieres();
     	String res = "";
     	for(Matiere m : matieres) {
-    		res += ","+m;
+    		res += ","+m.getNom();
     	}
     	if (res != "") {
     		res = res.substring(1);
@@ -550,12 +730,50 @@ public class Facade {
     	Collection<Type> types = edt_associe.getTypes();
     	String res = "";
     	for(Type t : types) {
-    		res += ","+t;
+    		res += ","+t.getNom();
     	}
     	if (res != "") {
     		res = res.substring(1);
     	}
     	return res;
+    }
+    
+    public String getWeek(String lundi) {
+    	String[] date = lundi.split(",");
+    	LocalDate monday = LocalDate.of(Integer.parseInt(date[2]),Integer.parseInt(date[1]),Integer.parseInt(date[0]));
+        
+        // Stocker les dates de la semaine
+        String weekDates = "";
+        for (int i = 0; i < 5; i++) {
+        	weekDates += monday.getDayOfMonth() + "/" + monday.getMonthValue() + ";";
+            monday = monday.plusDays(1);
+        }
+        return weekDates;
+        
+    }
+    
+    public String getAllMondaysYear() {
+    	LocalDate today = LocalDate.now();
+    	LocalDate fin = LocalDate.of(today.getYear(), 8, 28);
+    	LocalDate debut;
+    	if (today.isBefore(fin)) {
+    		debut = LocalDate.of(today.minusYears(1).getYear(), 8, 28);
+    	}else {
+    		debut = fin;
+    		fin = LocalDate.of(today.plusYears(1).getYear(), 8, 28);
+    	}
+        LocalDate monday = debut.with(TemporalAdjusters.previous(DayOfWeek.MONDAY));
+        
+        LocalDate lundiThisWeek = today.with(TemporalAdjusters.previous(DayOfWeek.MONDAY));
+    	
+        // Stocker les dates de la semaine
+        String lundis = ""+lundiThisWeek.getDayOfMonth()+"/"+lundiThisWeek.getMonthValue()+"/"+lundiThisWeek.getYear()+":";
+        while (monday.isBefore(fin)) {
+        	lundis += monday.getDayOfMonth() + "/" + monday.getMonthValue() + "/" + monday.getYear() + ";";
+        	monday = monday.plusDays(7);
+		}
+        return lundis;
+        
     }
 }
     
