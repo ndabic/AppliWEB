@@ -280,6 +280,56 @@ function updateUserInfoAjax(){
 	
 }
 
+function modifyInfoAjax(modifPswd){	
+    var formData = new FormData(); // Serialize form data
+
+    var correct = false;
+    if (modifPswd){
+	    formData.append("op", "save-user-pswrd");
+    	var pswd = document.getElementById("user-new-pswd").value;
+	    var pswdConf = document.getElementById("user-new-pswd-conf").value;
+	    if (!(pswd == " Nouveau mot de passe" || pswd == "" || pswdConf == " Nouveau mot de passe" || pswdConf == "" )){
+	    	correct = true;
+	    }
+    }else{
+	    formData.append("op", "save-user-infos");
+	    var firstname = document.getElementById("user-firstname").value;
+	    var name = document.getElementById("user-name").value;
+	    var email = document.getElementById("user-email").value;
+	    if (!(firstname == "" || name == "" || email == "" )){
+	    	correct = true;
+	    }
+    }
+    if(correct){
+	    var xhr = new XMLHttpRequest();
+	    xhr.open("POST", "Serv", true);
+	    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8"); // Set content type
+	    xhr.onreadystatechange = function() {
+	        if (xhr.readyState === XMLHttpRequest.DONE) {
+	            if (xhr.status === 200) {
+	                // Request succeeded
+	            	var res = xhr.responseText;
+	            	if (res.startsWith("success")) {
+	            		if (modifPswd){
+	            			document.getElementById("user-new-pswd").value = " Nouveau mot de passe";
+	            		    document.getElementById("user-new-pswd-conf").value = " Nouveau mot de passe";
+	            		}
+	            		modidyInfos()
+	            	    
+	            	} else {
+	            		console.error(res);
+	            	}
+	
+	            } else {
+	                // Request failed
+	                console.error("Request failed with status:", xhr.status);
+	            }
+	        }
+	    };
+	    xhr.send(new URLSearchParams(formData)); // Send form data
+    }
+}
+
 function adminEdtForm(self) {
 	
 	
