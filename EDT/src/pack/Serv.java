@@ -92,7 +92,7 @@ public class Serv extends HttpServlet {
 				cookieUser = facade.getUserCookie(mail_conn);
 				Cookie cookie = new Cookie("cookie-edt", cookieUser); // value equals the mail
 				cookie.setSecure(true);
-			    cookie.setHttpOnly(true);
+			    cookie.setHttpOnly(false);
 			    cookie.setPath("/");
 			    cookie.setMaxAge(60 * 60); // 1 hour
 			    cookie.setComment("SameSite=None; Secure"); // Add SameSite attribute manually
@@ -247,7 +247,7 @@ public class Serv extends HttpServlet {
 	        	facade.ajout_cours(heureDebut, minuteDebut, heureFin, minuteFin, 
                     jour, mois, annee, typeCours, matiereCours, 
                     sallesCours, profsCours, groupesCours, infosSuppCours, edtCours);
-	        	res = "displayOK";
+	        	res = "success:";
 	        }
 	        response.setContentType("text/html");
 	        response.setCharacterEncoding("UTF-8");

@@ -2,6 +2,32 @@ const delay = ms => new Promise(res => setTimeout(res, ms));
 let waitingTime = 30;
 const days = ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi"];
 
+function getCookie(name) {
+    let nameEQ = name + "=";
+    let ca = document.cookie.split(';');
+    for (let i = 0; i < ca.length; i++) {
+        let c = ca[i];
+        while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+        if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
+    }
+    return null;
+}
+
+function deleteCookie(name, path = "/", domain = "") {
+    if (getCookie(name)) {
+        document.cookie = name + "=" +
+            "; expires=Thu, 01 Jan 1970 00:00:00 UTC" +
+            "; path=" + path +
+            (domain ? "; domain=" + domain : "") +
+            ";";
+    }
+}
+
+function deleteCookieAndRefresh(name, path = "/", domain = "localhost") {
+    deleteCookie(name, path, domain);
+    window.location.href = "schedule.html"; // Refresh the page
+}
+
 document.addEventListener("DOMContentLoaded", function() {
 	checkCookieAjax();
     
@@ -182,7 +208,7 @@ function place_cours(couleur, matiere, type, salles, groupes, profs, horaire, jo
                     groupesHTML += ": ";
                 for (let index2 = 0; index2 < groupes.length; index2++) {
                     const groupe = groupes[index2];
-                    groupesHTML += groupe
+                    groupesHTML += groupe;
                     if (index2 + 1 < groupes.length)
                         groupesHTML += ", ";
 
@@ -196,7 +222,7 @@ function place_cours(couleur, matiere, type, salles, groupes, profs, horaire, jo
                 	sallesHTML += ": ";
                 for (let index2 = 0; index2 < salles.length; index2++) {
                     const salle = salles[index2];
-                    sallesHTML += salle
+                    sallesHTML += salle;
                     if (index2 + 1 < salles.length)
                     	sallesHTML += ", ";
 
@@ -206,7 +232,7 @@ function place_cours(couleur, matiere, type, salles, groupes, profs, horaire, jo
                 let profsHTML = "<p><span class='info_cours'>";
                 for (let index2 = 0; index2 < profs.length; index2++) {
                     const prof = profs[index2];
-                    profsHTML += prof
+                    profsHTML += prof;
                     if (index2 + 1 < profs.length)
                     	profsHTML += ", ";
 
@@ -246,10 +272,10 @@ function place_cours(couleur, matiere, type, salles, groupes, profs, horaire, jo
 function contentAdded() {
     var notif = document.querySelector(".notif");
     notif.innerHTML = "Ajouté";
-    notif.classList.add("notif-show");
+    notif.classList.remove("hide");
 
     setTimeout(() => {
-        notif.classList.remove("notif-show");
+        notif.classList.add("hide");
         notif.innerHTML = "";
     }, 1000);
  }
@@ -359,6 +385,9 @@ function checkCookieAjax() {
                         var profile = document.querySelector(".user-profile");
                         profile.innerHTML = ress2[0] + " " + ress2[1];
                         profile.classList.remove("hide");
+                        
+                        var logOut = document.querySelector(".button-logout").classList.remove("hide");
+
                         document.querySelector(".user-container").classList.add("connected");
 
                         document.querySelectorAll(".sign-button").forEach(function (button) {
@@ -367,6 +396,8 @@ function checkCookieAjax() {
                     }else {
                 		console.error("cookies différents:", res);
                 	    document.querySelector(".user-profile").classList.add("hide");
+                	    document.querySelector(".button-logout").classList.add("hide");
+                	    
                 	    document.querySelector(".user-container").classList.remove("connected");
 
                 	    document.querySelectorAll(".sign-button").forEach(function(button) {
@@ -385,6 +416,12 @@ function checkCookieAjax() {
 
 function getCoursGroupesAjax() {
     return new Promise((resolve, reject) => {
+    	var schedule = document.querySelector(".schedule-table");
+    	var cours = schedule.querySelectorAll(".case_cours");
+    	cours.forEach(function(element) {
+            element.remove();
+        });
+    	
     	var form = document.getElementById("getCoursGroupes");
         var formData = new FormData(form);
 
@@ -403,35 +440,37 @@ function getCoursGroupesAjax() {
                 if (xhr.status === 200) {
                     var res = xhr.responseText;
                     if (res.startsWith("success")) {
+                    	
                     	var ress = res.split(":");
                         var coursS = ress[1].split(";");
                         
                         for (let i = 0; i < coursS.length-1; i++) {
                         	var cours = coursS[i].split(",");
                         	
-                            var matiere = cours[0];
-                            var type = cours[1];
-                            	var sallesSTR = cours[2].split("#");
+                        	var couleur = "rgba("+cours[0]+","+cours[1]+","+cours[2]+",0.5)";
+                            var matiere = cours[3];
+                            var type = cours[4];
+                            	var sallesSTR = cours[5].split("#");
                             var salles = [];
-                            for(let j = 0; j < sallesSTR.lenght-1; j++){
+                            for(let j = 0; j < sallesSTR.length-1; j++){
                             	salles.push(sallesSTR[j]);
                             }
                             
-                            	var groupesSTR = cours[3].split("#");
+                            	var groupesSTR = cours[6].split("#");
                             var groupes = [];
-                            for(let j = 0; j < groupesSTR.lenght-1; j++){
+                            for(let j = 0; j < groupesSTR.length-1; j++){
                             	groupes.push(groupesSTR[j]);
                             }
                             
-                            	var profsSTR = cours[4].split("#");
+                            	var profsSTR = cours[7].split("#");
                             var profs = [];
-                            for(let j = 0; j < profsSTR.lenght-1; j++){
+                            for(let j = 0; j < profsSTR.length-1; j++){
                             	profs.push(profsSTR[j]);
                             }
-                            var horaire = [[parseInt(cours[5]), parseInt(cours[6])], [parseInt(cours[7]), parseInt(cours[8])]];
-                            var jour = parseInt(cours[9]) - 1;
+                            var horaire = [[parseInt(cours[8]), parseInt(cours[9])], [parseInt(cours[10]), parseInt(cours[11])]];
+                            var jour = parseInt(cours[12]) - 1;
                             
-                            place_cours("rgba(255, 45, 100, 0.5)", matiere, type, salles, groupes, profs, horaire, jour);
+                            place_cours(couleur, matiere, type, salles, groupes, profs, horaire, jour);
                         }
                         
                     } /*else {
@@ -482,39 +521,27 @@ function submitFormAjax(formID) {
 	            if (xhr.status === 200) {
 	            	var res = xhr.responseText;
 	            	if (res.startsWith("success")) {
-	            		if (formID == "addCours" && res != "success:"){
-	            			var ress = res.split(":");
-	                        var coursS = ress[1].split(";");
-	                        var cours = coursS[i].split(",");
-	                        
-                            var matiere = cours[0];
-                            var type = cours[1];
-                            	var sallesSTR = cours[2].split("#");
-                            var salles = [];
-                            for(let j = 0; j < sallesSTR.lenght-1; j++){
-                            	salles.push(sallesSTR[j]);
-                            }
-                            
-                            	var groupesSTR = cours[3].split("#");
-                            var groupes = [];
-                            for(let j = 0; j < groupesSTR.lenght-1; j++){
-                            	groupes.push(groupesSTR[j]);
-                            }
-                            
-                            	var profsSTR = cours[4].split("#");
-                            var profs = [];
-                            for(let j = 0; j < profsSTR.lenght-1; j++){
-                            	profs.push(profsSTR[j]);
-                            }
-                            var horaire = [[cours[5], cours[6]], [cours[7], cours[8]]];
-                            var jour = cours[9] - 1;
-                            
-                            place_cours("rgba(255, 45, 100, 0.5)", matiere, type, salles, groupes, profs, horaire, jour);
-	                        
+	            		if (formID == "addCours"){
+		                    async function updateCours() {
+		            		    try {
+		            		        await getCoursGroupesAjax();
+		            		        console.log("getCoursGroupesAjax OK");
+		            		    } catch (error) {
+		            		        console.error("An error occurred:", error);
+		            		    }
+		            		}
+		            		
+		            		updateCours();
 	            		}
 	            		
 	            		
 	            		contentAdded();
+	            		
+	            		popUpContainer.classList.toggle("show-flex");
+	            		popUp.innerHTML = "";
+	            		
+	            		
+	            		
 	            	} else {
 	            		console.error(res);
 	            	}
@@ -546,15 +573,18 @@ function buildDropDownAjax(containerID, descAToAdd, GETInfos) {
                     // Request succeeded
                 	var res = xhr.responseText;
                 	if (res.startsWith("success")){
-                		var ress = res.split(":");
-	                	var elems = ress[1].split(",");
-	                    var container = document.getElementById(containerID);
-	                    for (var i = 0; i < elems.length; i++) {
-	                    	if (!container.innerHTML.includes(descAToAdd + elems[i] + "</a>")) {
-	                    	    container.innerHTML += descAToAdd + elems[i] + "</a>";
-	                    	}
-	    					
-	    				}
+                		if(res != ("success:")){
+	                		var ress = res.split(":");
+		                	var elems = ress[1].split(",");
+		                    var container = document.getElementById(containerID);
+		                    for (var i = 0; i < elems.length; i++) {
+		                    	if (!container.innerHTML.includes(elems[i] + "</a>")) {
+		                    	    container.innerHTML += descAToAdd + elems[i] + "</a>";
+		                    	}
+		    					
+		    				}
+                		}
+                		
                 	}else{
                 		console.error(res);
                 	}

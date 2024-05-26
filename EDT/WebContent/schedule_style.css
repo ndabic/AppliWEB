@@ -7,6 +7,9 @@
     --color-3: #ab6c46;
     --color-4: #d19e79;
     --color-5: #f2e3c3;
+    
+    --color-danger: #e03f3f;
+    --color-save: #78b93c;
 
     --daySizeW: calc(100vw / 5);
     --daySizeH: calc(80vh / 24);
@@ -52,6 +55,34 @@ h1 {
     width: fit-content;
     height: fit-content;
     background-color: var(--color-1);
+}
+
+.button-exit {
+	cursor: pointer;
+    border-radius: 100%;
+    height: 30px;
+    width: 30px;
+    border: 0px solid var(--color-1);
+    background-image: linear-gradient(var(--color-danger), var(--color-danger));
+    background-size: 0% 100%;
+    background-color: var(--color-2);
+    background-repeat: no-repeat;
+    background-position: 0% 100%;
+    color: var(--color-5);
+    transition: background-position 500ms,
+    background-size 300ms, 
+    color 300ms
+    ease-in-out;
+}
+
+.button-exit:hover {
+    background-size: 100% 100%;
+    background-position: 0% 100%;
+    color: var(--color-5);
+    transition: background-position 100ms, 
+    background-size 600ms, 
+    color 800ms
+    ease-in-out;
 }
 
 /****/

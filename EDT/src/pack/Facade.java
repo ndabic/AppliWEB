@@ -98,9 +98,11 @@ public class Facade {
         String res = null;
         Utilisateur u = new Utilisateur();
         if (utilisateur.isEmpty() || utilisateur.size() > 1) {
-        	return "utilisateur non trouvé";
+        	return res;
         }else {
         	for (Utilisateur u2 : utilisateur) {
+        		//System.out.println("###################################################");
+        		//System.out.println(u2.getMail());
 				u = u2;
 			}
         }
@@ -114,33 +116,44 @@ public class Facade {
         Collection<Edt> edt = query2.getResultList();
         Edt e = new Edt();
         if (edt.isEmpty() || edt.size() > 1) {
-        	return "edt non trouvé";
+        	return res;
         }else {
         	for (Edt e2 : edt) {
+        		//System.out.println("###################################################");
+        		//System.out.println(e2.getNom());
 				e = e2;
 			}
         }
-        
         Collection<LinkUtilEDT> links = e.getLiens_utilisateur();
         boolean found = false;
+        boolean isProf = false;
         for (LinkUtilEDT link : links) {
-			if (link.getNumero() == numLink) {
+        	//System.out.println("###################################################");
+    		//System.out.println(link.getNumero());
+			if (link.getNumero().equals(numLink)) {
 				link.setUtilisateur(u);
+				isProf = link.getIsProf();
 				found = true;
 				break;
 			}
 		}
         
         if (!found) {
-        	return "link non trouvé";
+        	return res;
         }
 		
-		String EDT = "1" + "," + e.getNom() + "," + e.getCodeAdmin() + "," + e.getCodeProf() + "," + e.getCodeEtu();
+		String EDT = "1" + "," + e.getNom() + ",";
+		if(isProf) {
+			EDT += e.getCodeProf();
+		}else {
+			EDT += e.getCodeEtu();
+		}
+		EDT += "," + numLink;
 		
 		return EDT;
 	}
 	
-	public List<LocalDateTime> getLundiVendrediCourant() {
+	/*public List<LocalDateTime> getLundiVendrediCourant() {
 		LocalDate today = LocalDate.now();
 		int jourSemaine = today.getDayOfWeek().getValue();
 		LocalDate lundi = today.minusDays(jourSemaine-1);
@@ -179,7 +192,7 @@ public class Facade {
 		
 		return coursSemaine;
 		
-	}
+	}*/
 	
 	public List<LocalDateTime> getLundiVendredi(String lundiSemaine) {
 		String[] lundiDate = lundiSemaine.split(",");
@@ -218,7 +231,7 @@ public class Facade {
 				for (Cours cours : coursCourant) {
 					if (cours.getDebut().isAfter(lundi) && cours.getFin().isBefore(vendredi)) {
 						
-						coursSemaine += cours.getMatiere().getNom() + "," + cours.getType().getNom() + ",";
+						coursSemaine += cours.getMatiere().getCouleur() + "," + cours.getMatiere().getNom() + "," + cours.getType().getNom() + ",";
 						for (Salle s : cours.getSalle()) {
 							coursSemaine += s.getNom() + "#";
 						}
@@ -268,7 +281,7 @@ public class Facade {
 			for (Cours cours : coursCourant) {
 				if (cours.getDebut().isAfter(lundi) && cours.getFin().isBefore(vendredi)) {
 					
-					coursSemaine += cours.getMatiere().getNom() + "," + cours.getType().getNom() + ",";
+					coursSemaine += cours.getMatiere().getCouleur() + "," + cours.getMatiere().getNom() + "," + cours.getType().getNom() + ",";
 					for (Salle s : cours.getSalle()) {
 						coursSemaine += s.getNom() + "#";
 					}
@@ -443,6 +456,7 @@ public class Facade {
 		Collection<LinkUtilEDT> list_profs = new ArrayList<LinkUtilEDT>();
 		for(String prof_string : profs) {
 			String[] prof = prof_string.split(" ");
+
 			
 			LinkUtilEDT p = em.find(LinkUtilEDT.class, prof[0]);
 			if (p != null) {
@@ -496,11 +510,7 @@ public class Facade {
 		em.persist(nouveau);
 	}
 	
-	// ONLY FOR DEV ///////////////////////////////////////////////////
-	/*@PostConstruct
-	public void initialisation() {
-		ajout_cours("8", "0", "15", "45", "24", "5", "2024", )
-	}*/
+	
 	
 	public void ajout_cours(String heureDebut_string, String minuteDebut_string, String heureFin_string, String minuteFin_string, 
             String jour_string, String mois_string, String annee_string, String type_string, String matiere_string, 
@@ -528,7 +538,8 @@ public class Facade {
 		
 		Collection<LinkUtilEDT> list_profs = new ArrayList<LinkUtilEDT>();
 		for(String prof_string : profs) {
-			LinkUtilEDT p = em.find(LinkUtilEDT.class, prof_string);
+			String[] prof = prof_string.split(" ");
+			LinkUtilEDT p = em.find(LinkUtilEDT.class, prof[0]);
 			list_profs.add(p);
 		}
 		
@@ -599,11 +610,60 @@ public class Facade {
     
     }
     
+    public String generateColor() {
+    	int colorMax = 610;
+    	int colorMin = 150;
+    	int colorI = random.nextInt(colorMax - colorMin + 1) + colorMin;
+    	int[] colors = new int[3];
+    	
+    	colors[0] = random.nextInt(256);
+    	colorMin -= colors[0];
+    	colorMax -= colors[0];
+    	colors[1] = random.nextInt(256);
+    	colorMin -= colors[1];
+    	colorMax -= colors[1];
+    	
+    	int max = Math.min(255, colorMax);
+    	int min = Math.max(0, colorMin);
+    	colors[2] = random.nextInt(max - min + 1) + min;
+    	
+    	for (int i = colors.length - 1; i > 0; i--) {
+            int index = random.nextInt(i + 1);
+            int temp = colors[i];
+
+            colors[i] = colors[index];
+            colors[index] = temp;
+        }
+    	
+    	String color = colors[0] + "," + colors[1] + "," + colors[2];
+    	
+    	return color;
+    }
+    
     public void ajout_matiere(String nom, String edt) {
     	//on crée le prof
     	Matiere matiere = new Matiere();
     	matiere.setNom(nom);
+    	String couleur = generateColor();
+    	String requete = "SELECT m FROM Matiere m WHERE m.couleur = :couleur";
+        TypedQuery<Matiere> query = em.createQuery(requete, Matiere.class);
+        query.setParameter("couleur", couleur);
+        query.setMaxResults(1);
+
+        // Execute the query and get the result list
+        Collection<Matiere> mat = query.getResultList();
+        while (!mat.isEmpty()) {
+        	couleur = generateColor();
+        	requete = "SELECT m FROM Matiere m WHERE m.couleur = :couleur";
+            query = em.createQuery(requete, Matiere.class);
+            query.setParameter("couleur", couleur);
+            query.setMaxResults(1);
+
+            // Execute the query and get the result list
+            mat = query.getResultList();
+        }
     	
+        matiere.setCouleur(couleur);
     	String[] codes = edt.split(",");
     	Edt edt_associe = em.find(Edt.class, codes[0]);
     	matiere.setEdt_associe(edt_associe);

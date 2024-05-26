@@ -21,6 +21,8 @@
 		<div class="user-container connected">
 
 			<div class="user-profile" onclick="location.href='profile.html'"></div>
+			
+			<button onclick="deleteCookieAndRefresh('cookie-edt')" class="button-logout">X</button>
 		
 			<button class="sign-button button-color-1 hide" onclick="location.href='connexion.html'">
 				Connexion

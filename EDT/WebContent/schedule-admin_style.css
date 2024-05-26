@@ -60,7 +60,7 @@ h1 {
 }
 
 .notif {
-    display: none;
+    display: block;
     position: fixed;
     top: 10px;
     right: 100px;
@@ -136,6 +136,7 @@ h1 {
     color: var(--color-1);
     cursor: pointer;
     transition: color 300ms ease-in-out;
+    margin-right: 5px;
 }
 
 .user-container.connected:hover .user-profile {
@@ -671,6 +672,7 @@ input[type="submit"]:hover, .button-csv:hover, .choice-button:hover, .time-butto
 }
 
 .button-exit {
+	cursor: pointer;
 	position: absolute;
 	top: 0%;
 	right: 0%;
@@ -691,6 +693,34 @@ input[type="submit"]:hover, .button-csv:hover, .choice-button:hover, .time-butto
 }
 
 .button-exit:hover {
+    background-size: 100% 100%;
+    background-position: 0% 100%;
+    color: var(--color-5);
+    transition: background-position 100ms, 
+    background-size 600ms, 
+    color 800ms
+    ease-in-out;
+}
+
+.button-logout {
+	cursor: pointer;
+    border-radius: 100%;
+    height: 30px;
+    width: 30px;
+    border: 0px solid var(--color-1);
+    background-image: linear-gradient(var(--color-danger), var(--color-danger));
+    background-size: 0% 100%;
+    background-color: var(--color-2);
+    background-repeat: no-repeat;
+    background-position: 0% 100%;
+    color: var(--color-5);
+    transition: background-position 500ms,
+    background-size 300ms, 
+    color 300ms
+    ease-in-out;
+}
+
+.button-logout:hover {
     background-size: 100% 100%;
     background-position: 0% 100%;
     color: var(--color-5);
