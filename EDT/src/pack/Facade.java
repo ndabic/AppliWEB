@@ -194,6 +194,31 @@ public class Facade {
 		
 	}*/
 	
+	public void modif_mdp(String new_mdp, String new_mdp_conf, String cookies_modif) {
+        if (new_mdp.equals("new_mdp_conf")) {
+	        String jpql = "Select u FROM Utilisateur u WHERE u.cookie = :cookieValue";
+	        
+	        TypedQuery<Utilisateur> query = em.createQuery(jpql, Utilisateur.class);
+	        query.setParameter("cookieValue", cookies_modif);
+
+	        Utilisateur u = query.getSingleResult();
+	        u.setMdp(new_mdp);
+	        
+        }
+    }
+
+    public void modif_profile(String new_prenom, String new_nom, String new_email, String cookies_modif) {
+        String jpql = "Select u FROM Utilisateur u WHERE u.cookie = :cookieValue";
+        TypedQuery<Utilisateur> query = em.createQuery(jpql, Utilisateur.class);
+        query.setParameter("cookieValue", cookies_modif);
+        
+        Utilisateur u = query.getSingleResult();
+        u.setMail(new_email);
+        u.setNom(new_nom);
+        u.setPrenom(new_prenom);
+        
+    }
+	
 	public List<LocalDateTime> getLundiVendredi(String lundiSemaine) {
 		String[] lundiDate = lundiSemaine.split(",");
 		LocalDate lundi = LocalDate.of(Integer.parseInt(lundiDate[2]), Integer.parseInt(lundiDate[1]), Integer.parseInt(lundiDate[0]));

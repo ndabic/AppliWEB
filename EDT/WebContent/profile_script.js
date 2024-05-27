@@ -70,7 +70,16 @@ btnAddEdt.addEventListener("click", function() {
 });
 
 
+function modifyInfos() {
+    var notif = document.querySelector(".notif");
+    notif.innerHTML = "Modifié";
+    notif.classList.add("notif-show");
 
+    setTimeout(() => {
+        notif.classList.remove("notif-show");
+        notif.innerHTML = "";
+    }, 1000); 
+  }
 
 function copyContent(code) {
     navigator.clipboard.writeText(code)
@@ -284,10 +293,15 @@ function modifyInfoAjax(modifPswd){
     var formData = new FormData(); // Serialize form data
 
     var correct = false;
+    
     if (modifPswd){
 	    formData.append("op", "save-user-pswrd");
     	var pswd = document.getElementById("user-new-pswd").value;
 	    var pswdConf = document.getElementById("user-new-pswd-conf").value;
+	    
+	    formData.append("user-new-pswd", pswd);
+	    formData.append("user-new-pswd-conf", pswdConf);
+	    
 	    if (!(pswd == " Nouveau mot de passe" || pswd == "" || pswdConf == " Nouveau mot de passe" || pswdConf == "" )){
 	    	correct = true;
 	    }
@@ -296,6 +310,11 @@ function modifyInfoAjax(modifPswd){
 	    var firstname = document.getElementById("user-firstname").value;
 	    var name = document.getElementById("user-name").value;
 	    var email = document.getElementById("user-email").value;
+	    
+	    formData.append("user-firstname", firstname);
+	    formData.append("user-name", name);
+	    formData.append("user-email", email);
+	    
 	    if (!(firstname == "" || name == "" || email == "" )){
 	    	correct = true;
 	    }
@@ -314,7 +333,7 @@ function modifyInfoAjax(modifPswd){
 	            			document.getElementById("user-new-pswd").value = " Nouveau mot de passe";
 	            		    document.getElementById("user-new-pswd-conf").value = " Nouveau mot de passe";
 	            		}
-	            		modidyInfos()
+	            		modifyInfos();
 	            	    
 	            	} else {
 	            		console.error(res);

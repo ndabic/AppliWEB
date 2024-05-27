@@ -102,6 +102,30 @@ public class Serv extends HttpServlet {
 				request.getRequestDispatcher("connexion.html").forward(request, response);
 			}
 			break;
+		
+		case "save-user-infos":
+            String new_prenom = request.getParameter("user-firstname");
+            String new_nom = request.getParameter("user-name");
+            String new_email = request.getParameter("user-email");
+            facade.modif_profile(new_prenom,new_nom,new_email,cookieUser);
+            response.setContentType("text/html");
+            response.setCharacterEncoding("UTF-8");
+            PrintWriter outdate_info = response.getWriter();
+            outdate_info.print("success");
+            outdate_info.flush();
+            break;
+
+
+        case "save-user-pswrd":
+            String new_mdp = request.getParameter("user-new-pswd");
+            String new_mdp_conf = request.getParameter("user-new-pswd-conf");
+            facade.modif_mdp(new_mdp,new_mdp_conf,cookieUser);
+            response.setContentType("text/html");
+            response.setCharacterEncoding("UTF-8");
+            PrintWriter outdate_mdp = response.getWriter();
+            outdate_mdp.print("success");
+            outdate_mdp.flush();
+            break;
 			
 		case "getUserInfos":
 			response.setContentType("text/html");
