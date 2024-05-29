@@ -69,6 +69,12 @@ function getWeekAjax() {
 
 function getCoursSemaineAjax() {
     return new Promise((resolve, reject) => {
+    	var schedule = document.querySelector(".schedule-table");
+    	var cours = schedule.querySelectorAll(".case_cours");
+    	cours.forEach(function(element) {
+            element.remove();
+        });
+    	
         var formData = new FormData();
 
         formData.append("op", "getCoursSemaine");
